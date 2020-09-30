@@ -1,0 +1,49 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>kzu</Authors>
+    <Copyright>Copyright 2020 - Daniel Cazzulino</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>dotnet</PackageTags>
+
+    <Version>42.42.42</Version>
+    <PackageVersion>$(Version)</PackageVersion>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GenerateRepositoryUrlAttribute>true</GenerateRepositoryUrlAttribute>
+
+    <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\bin))</PackageOutputPath>
+
+    <PackOnBuild>true</PackOnBuild>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <LangVersion>Preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);*.binlog;*.zip</DefaultItemExcludes>
+  
+		<RestoreSources>C:\Code\kzu\NuGetizer\bin;https://api.nuget.org/v3/index.json;$(RestoreSources)</RestoreSources>  
+  </PropertyGroup>
+
+  <PropertyGroup Label="CI" Condition="'$(CI)' == ''">
+    <CI>false</CI>
+    <CI Condition="'$(TF_BUILD)' == 'true'">true</CI>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGetizer" Version="42.42.42" />
+  </ItemGroup>
+  
+  <ItemGroup Label="Workaround for public packages not having the latest ISourceGenerator API changes">
+    <!-- Workaround for revision mismatch with public versions -->
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0-preview.*" Pack="false" />
+    <PackageReference Include="System.Reflection.Metadata" Version="5.0.0-preview.*" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)..\img\icon.png" Link="icon.png" CopyToOutputDirectory="PreserveNewest" PackagePath="%(Filename)%(Extension)" />
+  </ItemGroup>
+  
+</Project>

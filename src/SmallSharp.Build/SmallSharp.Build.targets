@@ -1,0 +1,12 @@
+<Project>
+  <UsingTask TaskName="SmallSharp.JsonPeek" AssemblyFile="$(MSBuildThisFileDirectory)SmallSharp.Build.dll" />
+  
+  <Target Name="SetStartupCompile" BeforeTargets="CompileDesignTime;CoreCompile">
+    <ItemGroup>
+      <CompileToRemove Include="@(Compile)" Condition="'%(RelativeDir)' == ''" />
+      <Compile Remove="@(CompileToRemove)" />
+      <Compile Include="$(ActiveDebugProfile)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

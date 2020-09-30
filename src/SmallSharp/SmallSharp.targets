@@ -1,0 +1,17 @@
+<Project>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="DebugSourceGenerators" />
+    <CompilerVisibleProperty Include="DebugSmallSharp" />
+    <CompilerVisibleProperty Include="MSBuildProjectDirectory" />
+    <CompilerVisibleProperty Include="SkipCompilerExecution" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="@(Compile -> WithMetadataValue('RelativeDir', ''))" SourceItemType="Compile" />
+  </ItemGroup>
+  
+  <Import Project="SmallSharp.Build.targets" />
+
+</Project>

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>SmallSharp</PackageId>
+    <Description>SmallSharp</Description>
+    <BuildOutputKind>analyzers\cs</BuildOutputKind>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-3.final" Pack="false" />
+    <PackageReference Include="Prism.Forms" Version="7.2.0.1422" PrivateAssets="all" Pack="true" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmallSharp.Build\SmallSharp.Build.csproj" Kind="build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SmallSharp.targets" Pack="true" PackagePath="build\netstandard2.0\SmallSharp.targets" />
+  </ItemGroup>
+  
+  <Target Name="Dump" AfterTargets="ResolveReferences">
+    <WriteItemsToFile Overwrite="true" Items="@(PackageDependencies)" ItemName="PackageDependencies" File="$(BaseIntermediateOutputPath)dump.items" />
+  </Target>
+
+</Project>
