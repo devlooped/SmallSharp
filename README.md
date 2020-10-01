@@ -1,9 +1,7 @@
 ![Icon](img/icon-32.png) SmallSharp
 ============
 
-Create, edit and run multiple C# 9.0 top-level programs 
-in the same project by just selecting the startup program from the start 
-button!
+Create, edit and run multiple C# 9.0 top-level programs in the same project by just selecting the startup one right from the start button!
 
 ![Icon](img/launchSettings.png)
 
