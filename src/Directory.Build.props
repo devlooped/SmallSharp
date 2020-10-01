@@ -23,8 +23,6 @@
     <Nullable>enable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DefaultItemExcludes>$(DefaultItemExcludes);*.binlog;*.zip</DefaultItemExcludes>
-  
-		<RestoreSources>C:\Code\kzu\NuGetizer\bin;https://api.nuget.org/v3/index.json;$(RestoreSources)</RestoreSources>  
   </PropertyGroup>
 
   <PropertyGroup Label="CI" Condition="'$(CI)' == ''">
@@ -33,7 +31,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="42.42.42" />
+    <PackageReference Include="NuGetizer" Version="0.3.0" />
   </ItemGroup>
   
   <ItemGroup Label="Workaround for public packages not having the latest ISourceGenerator API changes">
