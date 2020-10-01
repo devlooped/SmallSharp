@@ -25,10 +25,7 @@ namespace SmallSharp
             var settings = new JObject(
                 new JProperty("profiles", new JObject(
                     documents.OrderBy(path => Path.GetFileName(path)).Select(path => new JProperty(Path.GetFileName(path), new JObject(
-                        new JProperty("commandName", "Project"), 
-                        new JProperty("environmentVariables", new JObject(
-                            new JProperty("source", Path.GetFileName(path))
-                        ))
+                        new JProperty("commandName", "Project")
                     )))
                 ))
             );
