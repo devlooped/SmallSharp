@@ -8,12 +8,10 @@ obj
 *.lock.json
 *.nuget.props
 *.nuget.targets
+dotnet-nugetize.items
 *.suo
 *.user
 *.cache
 *.log
 *.binlog
 *.rsp
-/src/Usage
-/src/Backup
-/src/TestResults

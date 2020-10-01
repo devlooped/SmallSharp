@@ -4,14 +4,47 @@
     <CompilerVisibleProperty Include="DebugSourceGenerators" />
     <CompilerVisibleProperty Include="DebugSmallSharp" />
     <CompilerVisibleProperty Include="MSBuildProjectDirectory" />
-    <CompilerVisibleProperty Include="SkipCompilerExecution" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="@(Compile -> WithMetadataValue('RelativeDir', ''))" SourceItemType="Compile" />
-  </ItemGroup>
-  
-  <Import Project="SmallSharp.Build.targets" />
+  <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile">
+    <!-- Top-level programs require this, so does our source generator. -->
+    <Error Text="SmallSharp requires Visual Studio 16.8 or greater."
+           Condition="$([MSBuild]::VersionLessThan($(MSBuildVersion), '16.8'))" />
+
+    <!-- If the active debug profile exists, use that as the startup -->
+    <PropertyGroup Condition="'$(ActiveDebugProfile)' != '' and Exists('$(ActiveDebugProfile)')">
+      <StartupFile>$(ActiveDebugProfile)</StartupFile>
+    </PropertyGroup>
+    <!-- Otherwise, pick the first .cs under the project root -->
+    <ItemGroup Condition="'$(StartupFile)' == ''">
+      <ReversedCompile Include="@(Compile -> Reverse())" Condition="'%(RelativeDir)' == ''" />
+    </ItemGroup>
+    <PropertyGroup Condition="'$(StartupFile)' == ''">
+      <StartupFile>%(ReversedCompile.Identity)</StartupFile>
+    </PropertyGroup>
+
+    <Error Text="Could not determine startup program file." Condition="'$(StartupFile)' == ''" />
+
+    <!-- Finally remove all non-startup files from Compile so you don't get build error 
+         for having multiple files with top-level program statements :) -->
+    <ItemGroup>
+      <Compile Remove="@(Compile)" Condition="'%(Filename)%(Extension)' != '$(StartupFile)' and '%(RelativeDir)' == ''" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Adds the additional files that the source generator uses to emit the launch profiles. -->
+  <Target Name="AddTopLevelCompile" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <ItemGroup>
+      <AdditionalFiles Include="*$(DefaultLanguageSourceExtension)" SourceItemType="Compile" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Make sure changing the launch profiles refreshes the design-time build -->
+  <Target Name="AddUpToDateCheckInputDesignTime" BeforeTargets="CollectUpToDateCheckInputDesignTime">
+    <ItemGroup>
+      <UpToDateCheckInput Include="$(MSBuildProjectDirectory)\Properties\launchSettings.json" />
+    </ItemGroup>
+  </Target>
 
 </Project>
