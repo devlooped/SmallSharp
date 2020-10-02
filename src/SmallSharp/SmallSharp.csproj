@@ -4,18 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>SmallSharp</PackageId>
     <Description>Create, edit and run multiple C# 9.0 top-level programs in the same project by just selecting the startup one right from the start button!</Description>
-    <BuildOutputKind>analyzers\cs</BuildOutputKind>
+    <PackFolder>analyzers\cs</PackFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="0.3.0" />
+    <PackageReference Include="NuGetizer" Version="0.4.1" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" Pack="false" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0-3.final" Pack="false" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="@(None)" Kind="build" />
+    <None Update="@(None)" PackFolder="build" />
   </ItemGroup>
   
 </Project>
