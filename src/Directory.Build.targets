@@ -32,7 +32,13 @@
     <MakeDir Directories="$(PackageOutputPath)" Condition="'$(PackageOutputPath)' != '' And !Exists('$(PackageOutputPath)')" />
   </Target>
 
-  <Target Name="UpdatePackageMetadata" BeforeTargets="PrepareForBuild;GetAssemblyVersion;GenerateNuspec;Pack" Condition="$(IsPackable) And '$(RepositoryUrl)' != '' And '$(SourceRevisionId)' != ''">
+  <Target Name="UpdatePackageMetadata" 
+          BeforeTargets="PrepareForBuild;GetAssemblyVersion;GetPackageMetadata;GenerateNuspec;Pack" 
+          DependsOnTargets="InitializeSourceControlInformation"
+          Condition="'$(SourceControlInformationFeatureSupported)' == 'true' And 
+                     '$(IsPackable)' == 'true' And 
+                     '$(RepositoryUrl)' != '' And 
+                     '$(SourceRevisionId)' != ''">
     <PropertyGroup>
       <Description>
         $(Description)
