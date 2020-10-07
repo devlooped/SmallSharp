@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Linq;
+using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SmallSharp
 {
@@ -33,9 +32,15 @@ namespace SmallSharp
             if (context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.MSBuildProjectDirectory", out var directory))
             {
                 Directory.CreateDirectory(Path.Combine(directory, "Properties"));
-                File.WriteAllText(
-                    Path.Combine(directory, "Properties", "launchSettings.json"),
-                    settings.ToString(Formatting.Indented));
+                var filePath = Path.Combine(directory, "Properties", "launchSettings.json");
+                var json = settings.ToString(Formatting.Indented);
+
+                // Only write if different content.
+                if (File.Exists(filePath) &&
+                    File.ReadAllText(filePath) == json)
+                    return;
+
+                File.WriteAllText(filePath, json);
             }
         }
     }
