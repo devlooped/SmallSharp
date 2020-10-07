@@ -15,7 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="@(None)" PackFolder="build" />
+    <ProjectReference Include="..\SmallSharp.Build\SmallSharp.Build.csproj" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Update="@(None)" PackFolder="build\netstandard2.0" />
+  </ItemGroup>
+
 </Project>
