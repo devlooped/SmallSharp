@@ -1,5 +1,12 @@
 <Project>
 
+  <PropertyGroup>
+    <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
+    <UserProjectNamespace>
+        <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
+    </UserProjectNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <CompilerVisibleProperty Include="DebugSourceGenerators" />
     <CompilerVisibleProperty Include="DebugSmallSharp" />
@@ -7,29 +14,103 @@
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
   </ItemGroup>
 
-  <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile">
+  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile">
     <!-- Top-level programs require this, so does our source generator. -->
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater."
            Condition="$([MSBuild]::VersionLessThan($(MSBuildVersion), '16.8'))" />
+  </Target>
 
-    <!-- If the active debug profile exists, use that as the startup -->
-    <PropertyGroup Condition="'$(ActiveDebugProfile)' != '' and Exists('$(ActiveDebugProfile)')">
-      <StartupFile>$(ActiveDebugProfile)</StartupFile>
+  <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile" 
+          Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">
+
+    <PropertyGroup Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">
+      <FindStartupFile>true</FindStartupFile>
     </PropertyGroup>
-    <!-- Otherwise, pick the first .cs under the project root -->
-    <ItemGroup Condition="'$(StartupFile)' == ''">
-      <ReversedCompile Include="@(Compile -> Reverse())" Condition="'%(RelativeDir)' == ''" />
+    <ItemGroup Condition="'$(FindStartupFile)' == 'true'">
+      <CandidateCompile Include="*$(DefaultLanguageSourceExtension)" />
+      <ReversedCompile Include="@(CandidateCompile -> Reverse())" />
     </ItemGroup>
-    <PropertyGroup Condition="'$(StartupFile)' == ''">
+    <PropertyGroup Condition="'$(FindStartupFile)' == 'true'">
       <StartupFile>%(ReversedCompile.Identity)</StartupFile>
     </PropertyGroup>
 
-    <Error Text="Could not determine startup program file." Condition="'$(StartupFile)' == ''" />
+    <!-- If .user file doesn't exist at all, create it now -->
+    <PropertyGroup Condition="!Exists('$(MSBuildProjectFullPath).user')">
+      <UserProject>
+        <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+            <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+              <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
+            </PropertyGroup>
+            <PropertyGroup>
+              <ActiveDebugProfile>$(StartupFile)</ActiveDebugProfile>
+          </PropertyGroup>
+        </Project>
+      </UserProject>
+      <WriteStartupFile>false</WriteStartupFile>
+    </PropertyGroup>
+		<WriteLinesToFile File="$(MSBuildProjectFullPath).user" 
+                      Lines="$(UserProject)"
+                      Condition="!Exists('$(MSBuildProjectFullPath).user')" />
 
-    <!-- Finally remove all non-startup files from Compile so you don't get build error 
-         for having multiple files with top-level program statements :) -->
+    <XmlPoke XmlInputPath="$(MSBuildProjectFullPath).user"
+             Value="$(StartupFile)"
+             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile"
+             Namespaces="$(UserProjectNamespace)"
+             Condition="'$(WriteStartupFile)' != 'false' and '$(StartupFile)' != ''"/>
+
+    <XmlPeek XmlInputPath="$(MSBuildProjectFullPath).user"
+             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile/text()"
+             Namespaces="$(UserProjectNamespace)">
+      <Output TaskParameter="Result" PropertyName="StartupDebugProfile" />
+    </XmlPeek>
+
+    <PropertyGroup Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'">
+      <ActiveDebugProfileProperty>
+          <ActiveDebugProfile>$(StartupFile)</ActiveDebugProfile>
+      </ActiveDebugProfileProperty>
+    </PropertyGroup>
+
+    <!-- The ActiveDebugProfile property element may be missing, failing to write the value -->
+    <XmlPoke XmlInputPath="$(MSBuildProjectFullPath).user"
+             Value="$(ActiveDebugProfileProperty)"
+             Query="/msb:Project/msb:PropertyGroup"
+             Namespaces="$(UserProjectNamespace)"
+             Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
+
+    <!-- Read again after we poke the ActiveDebugProfile property -->
+    <XmlPeek XmlInputPath="$(MSBuildProjectFullPath).user"
+             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile/text()"
+             Namespaces="$(UserProjectNamespace)">
+      <Output TaskParameter="Result" PropertyName="StartupDebugProfile" />
+    </XmlPeek>
+
+    <!-- The entire PropertyGroup could have been missing, failing to write the value -->
+    <PropertyGroup Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'">
+      <UserPropertyGroup>
+        <PropertyGroup>
+          <ActiveDebugProfile>$(StartupFile)</ActiveDebugProfile>
+        </PropertyGroup>
+      </UserPropertyGroup>    
+    </PropertyGroup>
+
+    <XmlPoke XmlInputPath="$(MSBuildProjectFullPath).user"
+             Value="$(UserPropertyGroup)"
+             Query="/msb:Project"
+             Namespaces="$(UserProjectNamespace)"
+             Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
+
+    <!-- Read again after we poke the PropertyGroup -->
+    <XmlPoke XmlInputPath="$(MSBuildProjectFullPath).user"
+             Value="$(StartupFile)"
+             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile/text()"
+             Namespaces="$(UserProjectNamespace)"
+             Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
+
+    <Warning Text="Could not set ActiveDebugProfile=$(StartupFile). Run the project once to fix it." 
+             Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
+
     <ItemGroup>
-      <Compile Remove="@(Compile)" Condition="'%(Filename)%(Extension)' != '$(StartupFile)' and '%(RelativeDir)' == ''" />
+      <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != ''" />
     </ItemGroup>
   </Target>
 
@@ -44,6 +125,7 @@
   <Target Name="AddUpToDateCheckInputDesignTime" BeforeTargets="CollectUpToDateCheckInputDesignTime">
     <ItemGroup>
       <UpToDateCheckInput Include="$(MSBuildProjectDirectory)\Properties\launchSettings.json" />
+			<UpToDateCheckInput Include="$(MSBuildProjectFullPath).user" />
     </ItemGroup>
   </Target>
 
