@@ -1,4 +1,4 @@
-name: build
+﻿name: build
 on: push
 
 env:
@@ -9,8 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - name: 🤘 checkout
+        uses: actions/checkout@v2
+      - name: ⚙ dotnet 5.0.x
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.1.20452.10
-      - run: dotnet build
+          dotnet-version: 5.0.x
+      - name: 🙏 build
+        run: dotnet build
