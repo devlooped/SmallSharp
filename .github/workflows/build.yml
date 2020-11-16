@@ -17,3 +17,7 @@ jobs:
           dotnet-version: 5.0.x
       - name: 🙏 build
         run: dotnet build
+      - name: 🚀 sleet
+        run: |
+          dotnet tool install -g --version 3.2.0 sleet 
+          sleet push bin --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=${{ secrets.SLEET_CONNECTION }}" -p "SLEET_FEED_TYPE=azure"

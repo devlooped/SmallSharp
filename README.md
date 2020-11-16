@@ -9,6 +9,7 @@ Create, edit and run multiple C# 9.0 top-level programs in the same project by j
 [![Downloads](https://img.shields.io/nuget/dt/SmallSharp.svg?color=green)](https://www.nuget.org/packages/SmallSharp)
 [![License](https://img.shields.io/github/license/kzu/SmallSharp.svg?color=blue)](https://github.com//kzu/SmallSharp/blob/main/LICENSE)
 [![Build](https://github.com/kzu/SmallSharp/workflows/build/badge.svg?branch=main)](https://github.com/kzu/SmallSharp/actions)
+[![CI Version](https://img.shields.io/endpoint?url=https://shields.kzu.io/vpre/SmallSharp/main&label=nuget.ci&color=brightgreen)](https://pkg.kzu.io/index.json)
 
 The new C# 9 [top-level programs](https://devblogs.microsoft.com/dotnet/welcome-to-c-9-0/#top-level-programs) allow a very intuitive, simple and streamlined experience for quickly spiking or learning C#. 
 
