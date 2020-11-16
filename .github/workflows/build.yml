@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: 🙏 build
-        run: dotnet build
+        run: dotnet build -p:versionsuffix="$(git name-rev --name-only --refs=refs/heads/* HEAD).$GITHUB_RUN_NUMBER"
       - name: 🚀 sleet
         if: ${{ !github.event.pull_request.head.repo.fork }}
         run: |
