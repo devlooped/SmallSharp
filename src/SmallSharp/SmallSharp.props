@@ -1,9 +1,5 @@
 <Project>
 
-  <PropertyGroup>
-    <LangVersion>Preview</LangVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="*$(DefaultLanguageSourceExtension)" />
     <Compile Include="$(ActiveDebugProfile)" Condition="Exists('$(ActiveDebugProfile)')" />

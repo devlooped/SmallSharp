@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
+    <MSBuildShortVersion>$(MSBuildVersion.TrimEnd('0123456789').TrimEnd('.'))</MSBuildShortVersion>
     <UserProjectNamespace>
         <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
@@ -14,10 +15,9 @@
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
   </ItemGroup>
 
-  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile">
+  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(MSBuildShortVersion) &gt;= '16.8'">
     <!-- Top-level programs require this, so does our source generator. -->
-    <Error Text="SmallSharp requires Visual Studio 16.8 or greater."
-           Condition="$([MSBuild]::VersionLessThan($(MSBuildVersion), '16.8'))" />
+    <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
   </Target>
 
   <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile" 
