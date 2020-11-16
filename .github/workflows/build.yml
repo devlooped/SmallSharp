@@ -1,5 +1,9 @@
 ﻿name: build
-on: push
+on: 
+  push:
+    branches: ['*']
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 env:
   DOTNET_NOLOGO: true
@@ -18,6 +22,7 @@ jobs:
       - name: 🙏 build
         run: dotnet build
       - name: 🚀 sleet
+        if: ${{ !github.event.pull_request.head.repo.fork }}
         run: |
           dotnet tool install -g --version 3.2.0 sleet 
           sleet push bin --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=${{ secrets.SLEET_CONNECTION }}" -p "SLEET_FEED_TYPE=azure"
