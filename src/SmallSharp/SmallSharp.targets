@@ -22,9 +22,6 @@
     <CompilerVisibleProperty Include="DebugSourceGenerators" Condition="$(DebugSourceGenerators) != ''" />
     <CompilerVisibleProperty Include="DebugSmallSharp" Condition="$(DebugSmallSharp) != ''" />
     <CompilerVisibleProperty Include="OpenStartupFile" Condition="$(OpenStartupFile) != ''" />
-    <CompilerVisibleProperty Include="OpenFromCompilationStart" Condition="$(OpenFromCompilationStart) != ''" />
-    <CompilerVisibleProperty Include="OpenFromAdditionalFile" Condition="$(OpenFromAdditionalFile) != ''" />
-    <CompilerVisibleProperty Include="OpenFromSymbolStart" Condition="$(OpenFromSymbolStart) != ''" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
   </ItemGroup>
 
