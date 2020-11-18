@@ -25,7 +25,9 @@
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
   </ItemGroup>
 
-  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(MSBuildShortVersion) &lt; '16.8'">
+  <!-- NOTE: we only require VS16.8+ when running in the IDE, since for CLI builds we just do targets stuff -->
+  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile" 
+          Condition="$(MSBuildShortVersion) &lt; '16.8' and '$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Top-level programs require this, so does our source generator. -->
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
   </Target>
