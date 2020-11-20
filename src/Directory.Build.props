@@ -7,6 +7,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>dotnet</PackageTags>
+    <PackageProjectUrl>https://www.cazzulino.com/SmallSharp/</PackageProjectUrl>
 
     <VersionPrefix>42.42.42</VersionPrefix>
     <PackageVersion>$(Version)</PackageVersion>
