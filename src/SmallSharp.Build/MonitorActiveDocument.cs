@@ -21,19 +21,26 @@ namespace SmallSharp.Build
             if (LaunchProfiles == null || UserFile == null || FlagFile == null)
                 return true;
 
-            if (BuildEngine4.GetRegisteredTaskObject(nameof(ActiveDocumentMonitor), RegisteredTaskObjectLifetime.AppDomain) is not ActiveDocumentMonitor monitor)
+            try
             {
-                if (WindowsInterop.GetServiceProvider() is IServiceProvider services)
+                if (BuildEngine4.GetRegisteredTaskObject(nameof(ActiveDocumentMonitor), RegisteredTaskObjectLifetime.AppDomain) is not ActiveDocumentMonitor monitor)
                 {
-                    BuildEngine4.RegisterTaskObject(nameof(ActiveDocumentMonitor),
-                        new ActiveDocumentMonitor(LaunchProfiles, UserFile, FlagFile, services),
-                        RegisteredTaskObjectLifetime.AppDomain, false);
+                    if (WindowsInterop.GetServiceProvider() is IServiceProvider services)
+                    {
+                        BuildEngine4.RegisterTaskObject(nameof(ActiveDocumentMonitor),
+                            new ActiveDocumentMonitor(LaunchProfiles, UserFile, FlagFile, services),
+                            RegisteredTaskObjectLifetime.AppDomain, false);
+                    }
+                }
+                else
+                {
+                    // NOTE: this means we only support ONE project/launchProfiles per IDE.
+                    monitor.Refresh(LaunchProfiles, UserFile, FlagFile);
                 }
             }
-            else
+            catch (Exception e)
             {
-                // NOTE: this means we only support ONE project/launchProfiles per IDE.
-                monitor.Refresh(LaunchProfiles, UserFile, FlagFile);
+                Log.LogWarning($"Failed to start active document monitoring: {e}");
             }
 
             return true;

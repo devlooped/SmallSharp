@@ -29,7 +29,7 @@ namespace SmallSharp
 
                 dte.ExecuteCommand("File.OpenFile", filePath);
             }
-            catch 
+            catch
             {
                 Debug.Fail($"Failed to open {filePath}.");
             }
@@ -43,11 +43,20 @@ namespace SmallSharp
             if (delay != default)
                 Thread.Sleep(delay);
 
-            var dte = GetDTE();
-            if (dte == null)
-                return null;
+            try
+            {
 
-            return new OleServiceProvider(dte);
+                var dte = GetDTE();
+                if (dte == null)
+                    return null;
+
+                return new OleServiceProvider(dte);
+            }
+            catch
+            {
+                Debug.Fail("Failed to get IDE service provider.");
+                return null;
+            }
         }
 
         static EnvDTE.DTE? GetDTE()
