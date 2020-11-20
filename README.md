@@ -97,10 +97,9 @@ using static System.Console;
 WriteLine("Hello World!");
 ```
 
-Keep adding as many top-level programs as you need, and switch between them easily from the Run button dropdown.
+Keep adding as many top-level programs as you need, and switch between them easily from the Run button dropdown or by simply changing the active document:
 
-
-![Demo](img/SmallSharp.gif)
+![Demo](img/TrackSelection.gif)
 
 ## How It Works
 

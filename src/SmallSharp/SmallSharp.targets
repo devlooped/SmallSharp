@@ -1,5 +1,6 @@
 <Project>
 
+  <UsingTask AssemblyFile="SmallSharp.Build.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
   <UsingTask AssemblyFile="SmallSharp.Build.dll" TaskName="OpenStartupFile" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
 
   <PropertyGroup>
@@ -138,6 +139,12 @@
          launch profile. We also only do this inside VS for obvious reasons. -->
     <OpenStartupFile FlagFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'OpenedStartupFile.txt'))"
                      StartupFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(StartupFile)'))" />
+  </Target>
+
+  <Target Name="MonitorActiveDocument" AfterTargets="CompileDesignTime">
+    <MonitorActiveDocument FlagFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'OpenedStartupFile.txt'))"
+                           LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
+                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))" />  
   </Target>
 
   <!-- Adds the additional files that the source generator uses to emit the launch profiles. -->

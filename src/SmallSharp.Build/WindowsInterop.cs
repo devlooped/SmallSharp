@@ -35,6 +35,21 @@ namespace SmallSharp
             }
         }
 
+        public static IServiceProvider? GetServiceProvider(TimeSpan delay = default)
+        {
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                return null;
+
+            if (delay != default)
+                Thread.Sleep(delay);
+
+            var dte = GetDTE();
+            if (dte == null)
+                return null;
+
+            return new OleServiceProvider(dte);
+        }
+
         static EnvDTE.DTE? GetDTE()
         {
             var window = NativeMethods.GetForegroundWindow();
