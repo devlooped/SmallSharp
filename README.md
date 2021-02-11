@@ -104,7 +104,7 @@ Keep adding as many top-level programs as you need, and switch between them easi
 ## How It Works
 
 This nuget package leverages in concert the following standalone and otherwise 
-unrelated features of Rosly, Visual Studio and MSBuild:
+unrelated features of Roslyn, Visual Studio and MSBuild:
 
 1. The C# compiler only allows one top-level program per compilation.
 2. Launch profiles (the entries in the Run dropdown) are populated from the Properties\launchSettings.json file
