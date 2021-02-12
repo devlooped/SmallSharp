@@ -65,7 +65,7 @@ namespace SmallSharp.Build
             try
             {
                 var json = JObject.Parse(File.ReadAllText(launchProfilesPath));
-                if (json.Property("profiles") is not JProperty prop || 
+                if (json.Property("profiles") is not JProperty prop ||
                     prop.Value is not JObject profiles)
                     return;
 
