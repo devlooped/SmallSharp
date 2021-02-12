@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>SmallSharp</PackageId>
     <Description>Create, edit and run multiple C# 9.0 top-level programs in the same project 😍</Description>
-    <PackFolder>analyzers\cs</PackFolder>
+    <PackFolder>analyzers\dotnet\cs</PackFolder>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Update="@(None)" PackFolder="build\netstandard2.0" />
+    <None Include="..\_._" PackFolder="lib\netstandard2.0" />
   </ItemGroup>
 
 </Project>

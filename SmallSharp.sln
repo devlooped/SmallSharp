@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\dependabot.yml = .github\dependabot.yml
 		src\Directory.Build.props = src\Directory.Build.props
 		src\Directory.Build.targets = src\Directory.Build.targets
+		src\Directory.props = src\Directory.props
 		global.json = global.json
 		README.md = README.md
 	EndProjectSection
@@ -18,10 +19,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{FFAB61A4-707D-4C79-A364-BF259FA865BB}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
-		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\changelog.yml = .github\workflows\changelog.yml
+		.github\workflows\pages.yml = .github\workflows\pages.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		.github\workflows\release-artifacts.yml = .github\workflows\release-artifacts.yml
+		.github\workflows\release-notes.yml = .github\workflows\release-notes.yml
+		.github\workflows\sponsors.ps1 = .github\workflows\sponsors.ps1
+		.github\workflows\sponsors.yml = .github\workflows\sponsors.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmallSharp.Build", "src\SmallSharp.Build\SmallSharp.Build.csproj", "{62834B0C-A2C2-4449-9E2A-00CC390A79BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp.Build", "src\SmallSharp.Build\SmallSharp.Build.csproj", "{62834B0C-A2C2-4449-9E2A-00CC390A79BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

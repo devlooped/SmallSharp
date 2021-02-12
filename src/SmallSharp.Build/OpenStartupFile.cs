@@ -10,7 +10,7 @@ namespace SmallSharp.Build
     {
         [Required]
         public string? FlagFile { get; set; }
-     
+
         public string? StartupFile { get; set; }
 
         public override bool Execute()
