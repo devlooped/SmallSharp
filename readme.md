@@ -5,11 +5,16 @@ Create, edit and run multiple C# 9.0 top-level programs in the same project 😍
 
 ![Icon](img/launchSettings.png)
 
+
+
 [![Version](https://img.shields.io/nuget/v/SmallSharp.svg?color=royalblue)](https://www.nuget.org/packages/SmallSharp)
-[![Downloads](https://img.shields.io/nuget/dt/SmallSharp.svg?color=green)](https://www.nuget.org/packages/SmallSharp)
-[![License](https://img.shields.io/github/license/kzu/SmallSharp.svg?color=blue)](https://github.com//kzu/SmallSharp/blob/main/LICENSE)
-[![Build](https://github.com/kzu/SmallSharp/workflows/build/badge.svg?branch=main)](https://github.com/kzu/SmallSharp/actions)
-[![CI Version](https://img.shields.io/endpoint?url=https://shields.kzu.io/vpre/SmallSharp/main&label=nuget.ci&color=brightgreen)](https://pkg.kzu.io/index.json)
+[![Downloads](https://img.shields.io/nuget/dt/SmallSharp?color=darkmagenta)](https://www.nuget.org/packages/SmallSharp)
+[![License](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/badge/-source-181717.svg?logo=GitHub)](https://github.com/devlooped/SmallSharp)
+
+[![CI Version](https://img.shields.io/endpoint?label=nuget.ci&color=brightgreen&url=https://shields.kzu.io/vpre/SmallSharp/main)](https://pkg.kzu.io/index.json)
+[![GH CI Status](https://github.com/devlooped/SmallSharp/workflows/build/badge.svg?branch=main)](https://github.com/devlooped/avatar/actions?query=branch%3Amain+workflow%3Abuild+)
+
 
 ## Why
 
