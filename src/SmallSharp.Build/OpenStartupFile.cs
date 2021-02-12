@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using EnvDTE;
+﻿using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -15,7 +13,7 @@ namespace SmallSharp.Build
 
         public override bool Execute()
         {
-            if (FlagFile == null || StartupFile == null)
+            if (string.IsNullOrEmpty(FlagFile) || string.IsNullOrEmpty(StartupFile))
                 return true;
 
             if (!File.Exists(FlagFile) ||
@@ -24,7 +22,7 @@ namespace SmallSharp.Build
                 // This defers the opening until the build completes.
                 BuildEngine4.RegisterTaskObject(
                     StartupFile,
-                    new DisposableAction(() => WindowsInterop.EnsureOpened(StartupFile)),
+                    new DisposableAction(() => WindowsInterop.EnsureOpened(StartupFile!)),
                     RegisteredTaskObjectLifetime.Build, false);
 
                 File.WriteAllText(FlagFile, StartupFile);

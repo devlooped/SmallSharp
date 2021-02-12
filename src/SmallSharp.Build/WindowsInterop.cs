@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -21,18 +22,29 @@ namespace SmallSharp
             if (delay != default)
                 Thread.Sleep(delay);
 
-            try
-            {
-                var dte = GetDTE();
-                if (dte == null)
-                    return;
+            var dte = GetDTE();
+            if (dte == null)
+                return;
 
-                dte.ExecuteCommand("File.OpenFile", filePath);
-            }
-            catch
+            var maxAttempts = 5;
+            var exceptions = new List<Exception>();
+
+            for (var i = 0; i < maxAttempts; i++)
             {
-                Debug.Fail($"Failed to open {filePath}.");
+                try
+                {
+                    dte.ExecuteCommand("File.OpenFile", filePath);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    exceptions.Add(e);
+                    Thread.Sleep(500);
+                }
             }
+
+            // NOTE: inspect exceptions variable
+            Debug.Fail($"Failed to open {filePath} after 5 attempts.");
         }
 
         public static IServiceProvider? GetServiceProvider(TimeSpan delay = default)
@@ -52,9 +64,9 @@ namespace SmallSharp
 
                 return new OleServiceProvider(dte);
             }
-            catch
+            catch (Exception e)
             {
-                Debug.Fail("Failed to get IDE service provider.");
+                Debug.Fail($"Failed to get IDE service provider: {e}");
                 return null;
             }
         }

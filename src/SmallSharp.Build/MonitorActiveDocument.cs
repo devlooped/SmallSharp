@@ -27,9 +27,19 @@ namespace SmallSharp.Build
                 {
                     if (WindowsInterop.GetServiceProvider() is IServiceProvider services)
                     {
-                        BuildEngine4.RegisterTaskObject(nameof(ActiveDocumentMonitor),
-                            new ActiveDocumentMonitor(LaunchProfiles, UserFile, FlagFile, services),
+                        var documentMonitor = new ActiveDocumentMonitor(LaunchProfiles, UserFile, FlagFile, services);
+
+                        BuildEngine4.RegisterTaskObject(nameof(ActiveDocumentMonitor), documentMonitor,
                             RegisteredTaskObjectLifetime.AppDomain, false);
+
+                        // Start monitoring at the end of the build, to avoid slowing down the DTB
+                        BuildEngine4.RegisterTaskObject("StartMonitor",
+                            new DisposableAction(() => documentMonitor.Start()),
+                            RegisteredTaskObjectLifetime.Build, false);
+                    }
+                    else
+                    {
+                        Debug.Fail("Failed to get IServiceProvider to monitor for active document.");
                     }
                 }
                 else
