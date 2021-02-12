@@ -4,6 +4,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <PackageTags>dotnet csharp</PackageTags>
     <PackOnBuild>true</PackOnBuild>
+    <PackageProjectUrl>https://clarius.org/SmallSharp</PackageProjectUrl>
     <NoWarn>NU1702;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
