@@ -10,7 +10,6 @@ on:
 
 env:
   DOTNET_NOLOGO: true
-  MSBUILDDISABLENODEREUSE: 1
 
 defaults:
   run:
@@ -65,5 +64,5 @@ jobs:
           SLEET_CONNECTION: ${{ secrets.SLEET_CONNECTION }}
         if: matrix.os == 'ubuntu-latest' && env.SLEET_CONNECTION != ''
         run: |
-          dotnet tool install -g --version 3.2.0 sleet 
+          dotnet tool install -g --version 4.0.18 sleet 
           sleet push bin --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=${{ secrets.SLEET_CONNECTION }}" -p "SLEET_FEED_TYPE=azure"

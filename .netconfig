@@ -27,7 +27,7 @@
 	weak
 [file ".github/workflows/build.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/build.yml
-	etag = 337666cc9f17f0cf395df950370967381f6de5134cc215f61035d36f38fed3a3
+	etag = 3ece28919da5fd43d3e264c775cb64b9f2f4a40dd8a02ec5a60617e203ecf97f
 	weak
 [file ".github/workflows/changelog.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/changelog.yml
