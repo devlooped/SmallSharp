@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json.Linq;
@@ -12,10 +13,12 @@ namespace SmallSharp.Build
     class ActiveDocumentMonitor : MarshalByRefObject, IDisposable, IVsRunningDocTableEvents, IVsSelectionEvents
     {
         FileSystemWatcher watcher;
-        readonly IVsRunningDocumentTable? rdt;
-        readonly IVsMonitorSelection? selection;
-        readonly uint rdtCookie;
-        readonly uint selectionCookie;
+        readonly IServiceProvider services;
+
+        IVsRunningDocumentTable? rdt;
+        IVsMonitorSelection? selection;
+        uint rdtCookie;
+        uint selectionCookie;
 
         string launchProfilesPath;
         string userFile;
@@ -27,6 +30,7 @@ namespace SmallSharp.Build
             this.launchProfilesPath = launchProfilesPath;
             this.userFile = userFile;
             this.flagFile = flagFile;
+            this.services = services;
 
             watcher = new FileSystemWatcher(Path.GetDirectoryName(launchProfilesPath))
             {
@@ -38,7 +42,10 @@ namespace SmallSharp.Build
             watcher.Created += (_, _) => ReloadProfiles();
             watcher.EnableRaisingEvents = true;
             ReloadProfiles();
+        }
 
+        public void Start()
+        {
             rdt = (IVsRunningDocumentTable)services.GetService(typeof(SVsRunningDocumentTable));
             if (rdt != null)
                 rdt.AdviseRunningDocTableEvents(this, out rdtCookie);
@@ -62,20 +69,32 @@ namespace SmallSharp.Build
             if (!File.Exists(launchProfilesPath))
                 return;
 
-            try
-            {
-                var json = JObject.Parse(File.ReadAllText(launchProfilesPath));
-                if (json.Property("profiles") is not JProperty prop ||
-                    prop.Value is not JObject profiles)
-                    return;
+            var maxAttempts = 5;
+            var exceptions = new List<Exception>();
 
-                startupFiles = profiles.Properties().Select(p => p.Name)
-                    .ToDictionary(x => x, StringComparer.OrdinalIgnoreCase);
-            }
-            catch
+            for (var i = 0; i < maxAttempts; i++)
             {
-                Debug.Fail("Could not read launchSettings.json");
+                try
+                {
+                    var json = JObject.Parse(File.ReadAllText(launchProfilesPath));
+                    if (json.Property("profiles") is not JProperty prop ||
+                        prop.Value is not JObject profiles)
+                        return;
+
+                    startupFiles = profiles.Properties().Select(p => p.Name)
+                        .ToDictionary(x => x, StringComparer.OrdinalIgnoreCase);
+
+                    return;
+                }
+                catch (Exception e)
+                {
+                    exceptions.Add(e);
+                    Thread.Sleep(500);
+                }
             }
+
+            // NOTE: check exceptions list to see why.
+            Debug.Fail("Could not read launchSettings.json");
         }
 
         void UpdateStartupFile(string? path)
@@ -105,9 +124,9 @@ namespace SmallSharp.Build
                         xdoc.Save(userFile);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    Debug.Fail("Failed to load or update .user file.");
+                    Debug.Fail($"Failed to load or update .user file: {e}");
                 }
             }
         }
@@ -115,12 +134,18 @@ namespace SmallSharp.Build
         void IDisposable.Dispose()
         {
             if (rdtCookie != 0 && rdt != null)
-                rdt.UnadviseRunningDocTableEvents(rdtCookie);
+                Try(() => rdt.UnadviseRunningDocTableEvents(rdtCookie));
 
             if (selectionCookie != 0 && selection != null)
-                selection.UnadviseSelectionEvents(selectionCookie);
+                Try(() => selection.UnadviseSelectionEvents(selectionCookie));
 
             watcher.Dispose();
+        }
+
+        void Try(Action action)
+        {
+            try { action(); }
+            catch (Exception e) { Debug.WriteLine(e); }
         }
 
         int IVsRunningDocTableEvents.OnAfterAttributeChange(uint docCookie, uint grfAttribs)

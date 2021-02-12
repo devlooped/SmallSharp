@@ -6,6 +6,9 @@
     <PackOnBuild>true</PackOnBuild>
     <PackageProjectUrl>https://clarius.org/SmallSharp</PackageProjectUrl>
     <NoWarn>NU1702;$(NoWarn)</NoWarn>
+
+    <StartAction>Program</StartAction>
+    <StartProgram>$(VsInstallRoot)\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
 
 </Project>

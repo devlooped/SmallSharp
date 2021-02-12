@@ -4,18 +4,12 @@
   <UsingTask AssemblyFile="SmallSharp.Build.dll" TaskName="OpenStartupFile" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
 
   <PropertyGroup>
-    <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
     <MSBuildShortVersion>$(MSBuildVersion.TrimEnd('0123456789').TrimEnd('.'))</MSBuildShortVersion>
     <UserProjectNamespace>
       <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile)" />
-    <Compile Include="$(ActiveDebugProfile)" Condition="Exists('$(ActiveDebugProfile)')" />
-  </ItemGroup>
 
   <ItemGroup>
     <CompilerVisibleProperty Include="MSBuildProjectDirectory" />
@@ -27,10 +21,18 @@
   </ItemGroup>
 
   <!-- NOTE: we only require VS16.8+ when running in the IDE, since for CLI builds we just do targets stuff -->
-  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile" 
+  <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile"
           Condition="$(MSBuildShortVersion) &lt; '16.8' and '$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Top-level programs require this, so does our source generator. -->
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
+  </Target>
+
+  <Target Name="SelectTopLevelCompile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime" DependsOnTargets="SelectStartupFile">
+    <ItemGroup>
+      <None Include="*$(DefaultLanguageSourceExtension)" />
+      <Compile Remove="*$(DefaultLanguageSourceExtension)" />
+      <Compile Include="$(StartupFile)" Condition="Exists('$(StartupFile)')" />
+    </ItemGroup>
   </Target>
 
   <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile"
@@ -122,12 +124,9 @@
     <Warning Text="Could not set ActiveDebugProfile=$(StartupFile). Run the project once to fix it."
              Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
 
-    <ItemGroup>
-      <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != ''" />
-    </ItemGroup>
   </Target>
 
-  <Target Name="OpenStartupFile" 
+  <Target Name="OpenStartupFile"
           BeforeTargets="CompileDesignTime"
           DependsOnTargets="SelectStartupFile"
           Condition="'$(OpenStartupFile)' != 'false' and 
@@ -144,7 +143,7 @@
   <Target Name="MonitorActiveDocument" AfterTargets="CompileDesignTime">
     <MonitorActiveDocument FlagFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'OpenedStartupFile.txt'))"
                            LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
-                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))" />  
+                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))" />
   </Target>
 
   <!-- Adds the additional files that the source generator uses to emit the launch profiles. -->
