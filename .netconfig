@@ -1,6 +1,18 @@
 [file]
 	url = https://github.com/devlooped/oss
 	url = https://github.com/devlooped/.github
+[file ".netconfig"]
+	url = https://github.com/devlooped/oss/blob/main/.netconfig
+    skip
+[file "src/icon.png"]
+	url = https://github.com/devlooped/oss/blob/main/src/icon.png
+	skip
+[file "readme.md"]
+	url = https://github.com/devlooped/oss/blob/main/readme.md
+	skip
+[file ".github/ISSUE_TEMPLATE/config.yml"]
+	url = https://github.com/devlooped/oss/blob/main/.github/ISSUE_TEMPLATE/config.yml
+	skip
 [file ".editorconfig"]
 	url = https://github.com/devlooped/oss/blob/main/.editorconfig
 	etag = 985aa022503959d35b03c870f07ae604cead7580d260775235ef6665aa9a6cbe
@@ -16,10 +28,6 @@
 [file ".github/ISSUE_TEMPLATE/bug.md"]
 	url = https://github.com/devlooped/oss/blob/main/.github/ISSUE_TEMPLATE/bug.md
 	etag = 026852ba1f1921f3a043bb5e09cd7a2c3d9a33ec51f48e524dc3a2ab72de3141
-	weak
-[file ".github/ISSUE_TEMPLATE/config.yml"]
-	url = https://github.com/devlooped/oss/blob/main/.github/ISSUE_TEMPLATE/config.yml
-	etag = b5ce64e6967276086eb89f86f57364da9c4deac988c7e0e04810a4f8caaa1400
 	weak
 [file ".github/dependabot.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/dependabot.yml
@@ -53,10 +61,6 @@
 	url = https://github.com/devlooped/oss/blob/main/.gitignore
 	etag = 925782b685859e07040442303b411bebd1c75b4fe4e075f547e067f33f323814
 	weak
-[file ".netconfig"]
-	url = https://github.com/devlooped/oss/blob/main/.netconfig
-	etag = 02de46ea12aee590c29d9c824b5a9ad067aa9d06b22c81d44505f1345d74fd81
-	weak
 [file "Directory.Build.rsp"]
 	url = https://github.com/devlooped/oss/blob/main/Directory.Build.rsp
 	etag = 6a6c6e1d3895df953abf14c82b0899e3eea75cdcd679f6212dcfea15183d73d6
@@ -85,10 +89,6 @@
 	url = https://github.com/devlooped/oss/blob/main/license.txt
 	etag = 2c6335b37e4ae05eea7c01f5d0c9d82b49c488f868a8b5ba7bff7c6ff01f3994
 	weak
-[file "readme.md"]
-	url = https://github.com/devlooped/oss/blob/main/readme.md
-	etag = fb40c68e1ac60f454d9a87050b8bd8b6a0890d4c6949055d3eb04e260e4927a6
-	weak
 [file "security.md"]
 	url = https://github.com/devlooped/oss/blob/main/security.md
 	etag = fc8101fd914820db3e6b42d608dc46aefbc60c830ac721ed3917daead3727dbd
@@ -100,10 +100,6 @@
 [file "src/Directory.Build.targets"]
 	url = https://github.com/devlooped/oss/blob/main/src/Directory.Build.targets
 	etag = f90be354c63f82bcfac68246648aee9a5a2842f1e4b66421b850939635610532
-	weak
-[file "src/icon.png"]
-	url = https://github.com/devlooped/oss/blob/main/src/icon.png
-	etag = 8b42109e3bd1da0fc50c67679c6d20aeac98f922870675e127cf19b8f2919971
 	weak
 [file "src/kzu.snk"]
 	url = https://github.com/devlooped/oss/blob/main/src/kzu.snk
