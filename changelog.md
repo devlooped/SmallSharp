@@ -1,5 +1,17 @@
 
 
+## [v1.0.3](https://github.com/devlooped/SmallSharp/tree/v1.0.3) (2021-02-12)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.0.2...v1.0.3)
+
+**Implemented enhancements:**
+
+- Set up Discussions for the project [\#21](https://github.com/devlooped/SmallSharp/issues/21)
+
+**Fixed bugs:**
+
+- Fix icon that was replaced with clarius.org one [\#22](https://github.com/devlooped/SmallSharp/issues/22)
+
 ## [v1.0.2](https://github.com/devlooped/SmallSharp/tree/v1.0.2) (2021-02-12)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.0.1...v1.0.2)
