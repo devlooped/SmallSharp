@@ -3,7 +3,7 @@
 
 Create, edit and run multiple C# 9.0 top-level programs in the same project 😍
 
-![Icon](img/launchSettings.png)
+![Icon](img/SmallSharpDemo.gif)
 
 
 
@@ -102,7 +102,7 @@ using static System.Console;
 WriteLine("Hello World!");
 ```
 
-Keep adding as many top-level programs as you need, and switch between them easily from the Run button dropdown or by simply changing the active document:
+Keep adding as many top-level programs as you need, and switch between them easily by simply changing the active document.
 
 ![Demo](img/TrackSelection.gif)
 
@@ -119,12 +119,12 @@ unrelated features of Roslyn, Visual Studio and MSBuild:
 
 Using the above features in concert, **SmallSharp** essentially does the following:
 
-a. Use a C# 9.0 [source generator](https://github.com/dotnet/roslyn/blob/master/docs/features/source-generators.cookbook.md) to enumerate `.cs` files directly under the project root and add them as entries in the `launchSettings.json` file. This causes VS to show them as available startup items in the Run button.
+a. Monitor the active document in VS and emit it as a `launchSettings.json` profile and set it as the `$(ActiveDebugProfile)`.
 
 b. Exclude `.cs` files at the project level from being included as `<Compile>` by the default SDK includes and include them explicitly as `<None>` instead so they show up in the solution explorer. This prevents the compiler from causing an error for multiple top-level programs.
 
-c. Explicitly include as `<Compile>` only the `$(ActiveDebugProfile)` property value, which due to `a.` and `3.` (from above), will be the source file we selected to "Run".
+b. Explicitly include as `<Compile>` only the `$(ActiveDebugProfile)` property value.
 
 This basically mean that this it will also work consistently if you use `dotnet run` from the command-line, since the "Main" file selection is performed exclusively via MSBuild item manipulation.
 
-Finally, there is some lovely COM-based magic to access the active Visual Studio IDE (via DTE) and automatically open the selected startup file, as well as monitor the currently opened source file to keep it in sync with the launch profile selection. This is done purely using public COM primitives and equally public VSSDK nuget packages their APIs. This enables some useful integration with the IDE without requiring to install a VS extension from the marketplace and deal with gracefully degrading functionality.
+Finally, there is some lovely COM-based magic to access the active Visual Studio IDE (via DTE) to monitor the currently opened source file to keep it in sync with the launch profile. This is done purely using public COM primitives and equally public VSSDK nuget packages their APIs. This enables some useful integration with the IDE without requiring installing a VS extension from the marketplace and deal with gracefully degrading functionality.
