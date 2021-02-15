@@ -1,5 +1,13 @@
 
 
+## [v1.1.0](https://github.com/devlooped/SmallSharp/tree/v1.1.0) (2021-02-15)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.0.3...v1.1.0)
+
+**Implemented enhancements:**
+
+- Adding new C\# file should result in a new startup file [\#9](https://github.com/devlooped/SmallSharp/issues/9)
+
 ## [v1.0.3](https://github.com/devlooped/SmallSharp/tree/v1.0.3) (2021-02-12)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.0.2...v1.0.3)
