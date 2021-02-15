@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 
 internal static class NativeMethods
 {
@@ -14,6 +15,21 @@ internal static class NativeMethods
     public static readonly Guid IID_IServiceProvider = typeof(Microsoft.VisualStudio.OLE.Interop.IServiceProvider).GUID;
     public static readonly Guid IID_IObjectWithSite = typeof(Microsoft.VisualStudio.OLE.Interop.IObjectWithSite).GUID;
     public static Guid IID_IUnknown = new Guid("00000000-0000-0000-C000-000000000046");
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+    internal static extern int GetShortPathName(
+        [MarshalAs(UnmanagedType.LPTStr)]
+         string path,
+        [MarshalAs(UnmanagedType.LPTStr)]
+         StringBuilder shortPath,
+        int shortPathLength);
+
+    internal static string GetShortPath(string path)
+    {
+        var shortPath = new StringBuilder(MAX_PATH);
+        GetShortPathName(path, shortPath, MAX_PATH);
+        return shortPath.ToString();
+    }
 
     [DllImport("ole32.dll")]
     internal static extern int CoRegisterMessageFilter(IMessageFilter lpMessageFilter, out IMessageFilter lplpMessageFilter);

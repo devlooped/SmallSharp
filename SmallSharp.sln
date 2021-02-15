@@ -3,11 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30516.212
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp", "src\SmallSharp\SmallSharp.csproj", "{F87C7A13-669C-4F18-9266-B256F254DFA3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5420D663-3EA6-419B-8F73-C7EA374CFBBE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.netconfig = .netconfig
 		.github\dependabot.yml = .github\dependabot.yml
 		src\Directory.Build.props = src\Directory.Build.props
 		src\Directory.Build.targets = src\Directory.Build.targets
@@ -27,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\sponsors.yml = .github\workflows\sponsors.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp.Build", "src\SmallSharp.Build\SmallSharp.Build.csproj", "{62834B0C-A2C2-4449-9E2A-00CC390A79BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp", "src\SmallSharp\SmallSharp.csproj", "{97648980-AA30-4AC0-B8E9-FCF6359F56A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +34,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F87C7A13-669C-4F18-9266-B256F254DFA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F87C7A13-669C-4F18-9266-B256F254DFA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F87C7A13-669C-4F18-9266-B256F254DFA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F87C7A13-669C-4F18-9266-B256F254DFA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62834B0C-A2C2-4449-9E2A-00CC390A79BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62834B0C-A2C2-4449-9E2A-00CC390A79BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62834B0C-A2C2-4449-9E2A-00CC390A79BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62834B0C-A2C2-4449-9E2A-00CC390A79BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97648980-AA30-4AC0-B8E9-FCF6359F56A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97648980-AA30-4AC0-B8E9-FCF6359F56A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97648980-AA30-4AC0-B8E9-FCF6359F56A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97648980-AA30-4AC0-B8E9-FCF6359F56A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

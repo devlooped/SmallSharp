@@ -1,23 +1,23 @@
 <Project>
 
-  <UsingTask AssemblyFile="SmallSharp.Build.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
-  <UsingTask AssemblyFile="SmallSharp.Build.dll" TaskName="OpenStartupFile" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
+  <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
 
   <PropertyGroup>
     <MSBuildShortVersion>$(MSBuildVersion.TrimEnd('0123456789').TrimEnd('.'))</MSBuildShortVersion>
+    <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
+    <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
     <UserProjectNamespace>
       <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
+    <!-- ActiveDebugProfile comes from the .user file, automatically set to the only entry we generate in launchSettings.json -->
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
+    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile</StartupFileDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
-    <CompilerVisibleProperty Include="MSBuildProjectDirectory" />
-    <CompilerVisibleProperty Include="ActiveDebugProfile" />
-    <CompilerVisibleProperty Include="DebugSourceGenerators" Condition="$(DebugSourceGenerators) != ''" />
-    <CompilerVisibleProperty Include="DebugSmallSharp" Condition="$(DebugSmallSharp) != ''" />
-    <CompilerVisibleProperty Include="OpenStartupFile" Condition="$(OpenStartupFile) != ''" />
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SourceItemType" />
+    <!-- Ensures all top-level files show up in the IDE -->
+    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile)" />
+    <Compile Include="$(ActiveDebugProfile)" Condition="Exists('$(ActiveDebugProfile)')" />
   </ItemGroup>
 
   <!-- NOTE: we only require VS16.8+ when running in the IDE, since for CLI builds we just do targets stuff -->
@@ -27,23 +27,38 @@
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
   </Target>
 
-  <Target Name="SelectTopLevelCompile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime" DependsOnTargets="SelectStartupFile">
+  <Target Name="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" AfterTargets="CompileDesignTime" DependsOnTargets="CollectStartupFile">
+    <MonitorActiveDocument LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
+                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))"
+                           StartupFiles="@(StartupFile)" />
+  </Target>
+
+  <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
+
+  <Target Name="CollectStartupFile">
     <ItemGroup>
-      <None Include="*$(DefaultLanguageSourceExtension)" />
-      <Compile Remove="*$(DefaultLanguageSourceExtension)" />
-      <Compile Include="$(StartupFile)" Condition="Exists('$(StartupFile)')" />
+      <StartupFile Include="*$(DefaultLanguageSourceExtension)" />
     </ItemGroup>
   </Target>
 
-  <Target Name="SelectStartupFile" BeforeTargets="BeforeCompile;CoreCompile"
+  <Target Name="SelectTopLevelCompile">
+    <ItemGroup>
+      <!-- We remove all top-level from Compile because copy/pasting startup files may end up 
+           causing those items to be hardcoded in the .csproj -->
+      <Compile Remove="@(Compile -> WithMetadataValue('RelativeDir', ''))" />
+      <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Defaults the startup file to the first Compile, if none previously selected. -->
+  <Target Name="SelectStartupFile"
           Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')">
 
     <PropertyGroup Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">
       <FindStartupFile>true</FindStartupFile>
     </PropertyGroup>
     <ItemGroup Condition="'$(FindStartupFile)' == 'true'">
-      <CandidateCompile Include="*$(DefaultLanguageSourceExtension)" />
-      <ReversedCompile Include="@(CandidateCompile -> Reverse())" />
+      <ReversedCompile Include="@(StartupFile -> Reverse())" />
     </ItemGroup>
     <PropertyGroup Condition="'$(FindStartupFile)' == 'true'">
       <StartupFile>%(ReversedCompile.Identity)</StartupFile>
@@ -117,7 +132,7 @@
     <!-- Read again after we poke the PropertyGroup -->
     <XmlPoke XmlInputPath="$(MSBuildProjectFullPath).user"
              Value="$(StartupFile)"
-             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile/text()"
+             Query="/msb:Project/msb:PropertyGroup/msb:ActiveDebugProfile"
              Namespaces="$(UserProjectNamespace)"
              Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
 
@@ -126,39 +141,9 @@
 
   </Target>
 
-  <Target Name="OpenStartupFile"
-          BeforeTargets="CompileDesignTime"
-          DependsOnTargets="SelectStartupFile"
-          Condition="'$(OpenStartupFile)' != 'false' and 
-                     '$(BuildingInsideVisualStudio)' == 'true' and 
-                     '$(StartupFile)' != '' and 
-                     ('$(SkipCompilerExecution)' == 'true' or '$(DesignTimeBuild)' == 'true')">
-    <!-- NOTE: we only open the startup file in a design-time build since for the real build, 
-         we assume the DTB has already happened, since it's executed right after changing the 
-         launch profile. We also only do this inside VS for obvious reasons. -->
-    <OpenStartupFile FlagFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'OpenedStartupFile.txt'))"
-                     StartupFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(StartupFile)'))" />
-  </Target>
-
-  <Target Name="MonitorActiveDocument" AfterTargets="CompileDesignTime">
-    <MonitorActiveDocument FlagFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'OpenedStartupFile.txt'))"
-                           LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
-                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))" />
-  </Target>
-
-  <!-- Adds the additional files that the source generator uses to emit the launch profiles. -->
-  <Target Name="AddTopLevelCompile" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
-    <ItemGroup>
-      <AdditionalFiles Include="*$(DefaultLanguageSourceExtension)" SourceItemType="Compile" />
-    </ItemGroup>
-  </Target>
-
-  <!-- Make sure changing the launch profiles refreshes the design-time build -->
-  <Target Name="AddUpToDateCheckInputDesignTime" BeforeTargets="CollectUpToDateCheckInputDesignTime">
-    <ItemGroup>
-      <UpToDateCheckInput Include="$(MSBuildProjectDirectory)\Properties\launchSettings.json" />
-      <UpToDateCheckInput Include="$(MSBuildProjectFullPath).user" />
-    </ItemGroup>
-  </Target>
+  <ItemGroup>
+    <!-- Ensure changes we make to this file trigger a new DTB -->
+    <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
+  </ItemGroup>
 
 </Project>
