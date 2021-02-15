@@ -14,39 +14,6 @@ namespace SmallSharp
     {
         static readonly Regex versionExpr = new Regex(@"Microsoft Visual Studio (?<version>\d\d\.\d)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        public static void EnsureOpened(string filePath, TimeSpan delay = default)
-        {
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                return;
-
-            if (delay != default)
-                Thread.Sleep(delay);
-
-            var dte = GetDTE();
-            if (dte == null)
-                return;
-
-            var maxAttempts = 5;
-            var exceptions = new List<Exception>();
-
-            for (var i = 0; i < maxAttempts; i++)
-            {
-                try
-                {
-                    dte.ExecuteCommand("File.OpenFile", filePath);
-                    return;
-                }
-                catch (Exception e)
-                {
-                    exceptions.Add(e);
-                    Thread.Sleep(500);
-                }
-            }
-
-            // NOTE: inspect exceptions variable
-            Debug.Fail($"Failed to open {filePath} after 5 attempts.");
-        }
-
         public static IServiceProvider? GetServiceProvider(TimeSpan delay = default)
         {
             if (Environment.OSVersion.Platform != PlatformID.Win32NT)
