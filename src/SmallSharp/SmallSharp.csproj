@@ -16,7 +16,7 @@
     <PackageReference Include="EnvDTE" Version="16.7.30508.193" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.7.30328.74" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.7.30328.74" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="16.7.30328.74" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="16.9.31023.347" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
   </ItemGroup>
 
