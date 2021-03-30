@@ -33,11 +33,6 @@
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Define constant for TF like NET5, NET472, NETSTANDARD2, NETSTANDARD21 -->
-    <DefineConstants Condition="'$(TargetFramework)' != '' and '$(TargetFrameworks)' != ''">$(DefineConstants);$(TargetFramework.ToUpperInvariant().TrimEnd('0').TrimEnd('.').Replace('.', ''))</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <!-- Consider the project out of date if any of these files changes -->
     <UpToDateCheck Include="@(PackageFile);@(None);@(Content);@(EmbeddedResource)" />

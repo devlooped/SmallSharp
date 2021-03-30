@@ -5,6 +5,8 @@ if ($author -eq $null) {
     throw 'No user id found'
 }
 
+gh auth status
+
 echo "Looking up sponsorship from $env:GITHUB_ACTOR ..."
 
 $query = gh api graphql --paginate -f owner='devlooped' -f query='
