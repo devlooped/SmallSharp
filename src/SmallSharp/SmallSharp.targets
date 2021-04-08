@@ -3,7 +3,6 @@
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
 
   <PropertyGroup>
-    <MSBuildShortVersion>$(MSBuildVersion.TrimEnd('0123456789').TrimEnd('.'))</MSBuildShortVersion>
     <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
     <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
     <UserProjectNamespace>
@@ -22,7 +21,7 @@
 
   <!-- NOTE: we only require VS16.8+ when running in the IDE, since for CLI builds we just do targets stuff -->
   <Target Name="EnsureVisualStudio" BeforeTargets="BeforeCompile;CoreCompile"
-          Condition="$(MSBuildShortVersion) &lt; '16.8' and '$(BuildingInsideVisualStudio)' == 'true'">
+          Condition="$([System.Version]::Parse('16.8.0').CompareTo($([System.Version]::Parse($(MSBuildVersion))))) == 1 and '$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Top-level programs require this, so does our source generator. -->
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
   </Target>
