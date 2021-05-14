@@ -1,6 +1,7 @@
 ﻿# Synchronizes .netconfig-configured files with dotnet-file
 name: dotnet-file
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
   push:
@@ -50,6 +51,8 @@ jobs:
         with:
           base: main
           branch: dotnet-file-sync
+          delete-branch: true
+          labels: dependencies
           commit-message: Bump files with dotnet-file sync
           
             ${{ env.CHANGES }}
