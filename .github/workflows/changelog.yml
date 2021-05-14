@@ -2,6 +2,7 @@
 on:
   release:
     types: [released]
+  workflow_dispatch:
 
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
