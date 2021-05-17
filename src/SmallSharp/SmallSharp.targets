@@ -1,6 +1,7 @@
 <Project>
 
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
+  <UsingTask AssemblyFile="JsonPeek.MSBuild.dll" TaskName="JsonPoke" />
 
   <PropertyGroup>
     <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
@@ -10,7 +11,7 @@
     </UserProjectNamespace>
     <!-- ActiveDebugProfile comes from the .user file, automatically set to the only entry we generate in launchSettings.json -->
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
-    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile</StartupFileDependsOn>
+    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings</StartupFileDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -138,6 +139,30 @@
     <Warning Text="Could not set ActiveDebugProfile=$(StartupFile). Run the project once to fix it."
              Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
 
+  </Target>
+
+  <Target Name="UpdateLaunchSettings">
+    <PropertyGroup>
+      <ProfileJsonPath>$(MSBuildProjectDirectory)\Properties\launchSettings.json</ProfileJsonPath>
+      <!-- Additional metadata to be used for each profile entry -->
+      <ProfileJsonMetadata>@(StartupFile -> '%(Filename)%(Extension)=')</ProfileJsonMetadata>
+      <ProfileJsonMetadataNames>@(StartupFile -> '%(Filename)%(Extension)')</ProfileJsonMetadataNames>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProfileJsonCommandName Include="JObject" commandName="Project" />
+    </ItemGroup>
+    <CreateItem Include="$(ProfileJsonPath)"
+                AdditionalMetadata="$(ProfileJsonMetadata)">
+      <Output ItemName="ProfileJsonWithMetadata" TaskParameter="Include" />
+    </CreateItem>
+    <JsonPoke JsonInputPath="$(ProfileJsonPath)"
+              JObject="@(ProfileJsonWithMetadata)"
+              Metadata="$(ProfileJsonMetadataNames)"
+              JPath="profiles" />
+    <JsonPoke JsonInputPath="$(ProfileJsonPath)"
+              JObject="@(ProfileJsonCommandName)"
+              Metadata="commandName"
+              JPath="$.profiles['%(StartupFile.Filename)%(StartupFile.Extension)']" />
   </Target>
 
   <ItemGroup>

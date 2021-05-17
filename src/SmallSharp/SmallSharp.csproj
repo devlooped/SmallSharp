@@ -17,16 +17,19 @@
     <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.7.30328.74" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.7.30328.74" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="16.7.30328.74" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Include="SmallSharp.targets" />
-    <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
+    <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9" GeneratePathProperty="true" Pack="false" />
+    <PackageReference Include="Newtonsoft.Json" Version="6.0.5" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="SmallSharp.targets" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
+    <PackageFile Include="tools\JsonPeek.MSBuild.dll" PackagePath="$(PackFolder)\JsonPeek.MSBuild.dll" PackageReference="JsonPoke.MSBuild" Visible="false" />
+    <PackageFile Include="tools\Newtonsoft.Json.dll" PackagePath="$(PackFolder)\Newtonsoft.Json.dll" PackageReference="JsonPoke.MSBuild" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Include="SmallSharp.targets" />
   </ItemGroup>
 
 </Project>
