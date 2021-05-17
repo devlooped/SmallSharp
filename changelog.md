@@ -1,5 +1,14 @@
 
 
+## [v1.1.2](https://github.com/devlooped/SmallSharp/tree/v1.1.2) (2021-05-17)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.1...v1.1.2)
+
+:sparkles: Implemented enhancements:
+
+- When trying to attach to the IDE ActiveDocument, increase wait between retries [\#41](https://github.com/devlooped/SmallSharp/issues/41)
+- Populate launchSettings with candidate top-level compile files [\#40](https://github.com/devlooped/SmallSharp/issues/40)
+
 ## [v1.1.1](https://github.com/devlooped/SmallSharp/tree/v1.1.1) (2021-04-08)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.0...v1.1.1)
