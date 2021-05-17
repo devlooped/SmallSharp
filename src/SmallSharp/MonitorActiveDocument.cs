@@ -49,7 +49,7 @@ namespace SmallSharp.Build
                             {
                                 BuildEngine4.Yield();
                             }
-                            catch (Exception e) 
+                            catch (Exception e)
                             {
                                 Debug.WriteLine(e);
                             }

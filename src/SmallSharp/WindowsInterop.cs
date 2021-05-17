@@ -86,7 +86,7 @@ namespace SmallSharp
 
             while (stopwatch.Elapsed < retryTimeout);
 
-            return (T)comObject;
+            return (T?)comObject;
         }
 
         static object? GetComObject(string monikerName)
