@@ -32,7 +32,7 @@ namespace SmallSharp.Build
                 if (BuildEngine4.GetRegisteredTaskObject(nameof(ActiveDocumentMonitor), RegisteredTaskObjectLifetime.AppDomain) is not ActiveDocumentMonitor monitor)
                 {
                     var maxAttempts = 5;
-                    for (var i = 0; i < maxAttempts; i++)
+                    for (var i = 1; i <= maxAttempts; i++)
                     {
                         if (WindowsInterop.GetServiceProvider() is IServiceProvider services)
                         {
@@ -53,7 +53,8 @@ namespace SmallSharp.Build
                             {
                                 Debug.WriteLine(e);
                             }
-                            Thread.Sleep(200);
+                            // Increase the wait time to allow more time between retries
+                            Thread.Sleep(200 * i);
                         }
                     }
 
