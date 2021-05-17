@@ -45,7 +45,14 @@ namespace SmallSharp.Build
                         }
                         else
                         {
-                            BuildEngine4.Yield();
+                            try
+                            {
+                                BuildEngine4.Yield();
+                            }
+                            catch (Exception e) 
+                            {
+                                Debug.WriteLine(e);
+                            }
                             Thread.Sleep(200);
                         }
                     }
