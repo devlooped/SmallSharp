@@ -40,9 +40,9 @@
 	sha = 0683ee777d7d878d4bf013d7deea352685135a05
 [file ".github/workflows/build.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/build.yml
-	etag = 0c1795c13d627d9051965912a0ff6fda07dd7d408d913ec477fb0a9aa753918e
+	etag = 91e9a208cd134bd7b71d7419800c613bc50a30e21e605607528721f2acdeab86
 	weak
-	sha = 6928fc7af55eeffbc3ecb35a2038ea6d90dbbc23
+	sha = fc5889d5387e2d5aa7aba279b2aa12251cf08cb2
 [file ".github/workflows/changelog.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/changelog.yml
 	etag = 1e17c477f9e26f83367870a18e3727a71dcbb49cd31d85e0cfcfe092202d3a66
@@ -63,9 +63,9 @@
 	sha = 70bc909d2ce6924385a8bcc3a9fb1cff338a3fb7
 [file ".github_changelog_generator"]
 	url = https://github.com/devlooped/oss/blob/main/.github_changelog_generator
-	etag = 115efcd056eaca2f1d2df510eb7632ac3558ace2734a4139b77536b8211dfe41
+	etag = 44dc852588ec508eaed9cefe260618eb162f0db50495188fc3c4e266b41944e2
 	weak
-	sha = cf52375fd20c6df894f1518890693312d4c4c11c
+	sha = a7ab5fe706fdfe1efb05d47d00ef4bb137088669
 [file ".gitignore"]
 	url = https://github.com/devlooped/oss/blob/main/.gitignore
 	etag = 925782b685859e07040442303b411bebd1c75b4fe4e075f547e067f33f323814
@@ -93,9 +93,9 @@
 	sha = bf7b4569981b558b130bdd3ce93043d624a567d8
 [file "assets/images/sponsors.svg"]
 	url = https://github.com/devlooped/oss/blob/main/assets/images/sponsors.svg
-	etag = 182780a2d68bdba9069000aef75712ab81c307eee1317bcd29d35563f523ba98
+	etag = d545e385f5b7db32d12a15905e0173246953cc0efdce0595a67cf9544e0a4fed
 	weak
-	sha = bf7b4569981b558b130bdd3ce93043d624a567d8
+	sha = 491c6ee4ed880dc92012dee9b1c4e7d3e9d14115
 [file "code-of-conduct.md"]
 	url = https://github.com/devlooped/oss/blob/main/code-of-conduct.md
 	etag = 4857c01bb695f09bf6912d778951c3065d9dd565e5de3d0827f40432d0e4c613
@@ -113,9 +113,9 @@
 	sha = a0f58a6d63e48ae6e55944c556d0bc94476dc8df
 [file "src/Directory.Build.props"]
 	url = https://github.com/devlooped/oss/blob/main/src/Directory.Build.props
-	etag = d9d8096ce24bfa68e7bd23728e737c8440fc05eb1a56a190fd671946ad89c277
+	etag = ae2606c157b9725ce8c707e30d9768fb0bad901ac34065d3cd75fc2bdbc5f8cf
 	weak
-	sha = ae442c0e142d8948b1d26136c057a73ece224581
+	sha = 52d6c40aaa460ac48fc74c03324c6b1db7ae170d
 [file "src/Directory.Build.targets"]
 	url = https://github.com/devlooped/oss/blob/main/src/Directory.Build.targets
 	etag = 874f20853c983e6440ed67bb571d94927f9fb4cd4438585b07df7b420c664609

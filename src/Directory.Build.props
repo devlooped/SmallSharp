@@ -79,6 +79,9 @@
     <NoWarn>NU5105;$(NoWarn)</NoWarn>
     <!-- Turn warnings into errors in CI or Release builds -->
     <WarningsAsErrors Condition="$(CI) or '$(Configuration)' == 'Release'">true</WarningsAsErrors>
+    
+    <!-- Preserve transitively copied content in VS: https://github.com/dotnet/msbuild/issues/1054#issuecomment-847959047 -->
+    <MSBuildCopyContentTransitively>true</MSBuildCopyContentTransitively>
   </PropertyGroup>
 
   <PropertyGroup Label="StrongName" Condition="Exists('$(MSBuildThisFileDirectory)kzu.snk')">
