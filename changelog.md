@@ -1,5 +1,13 @@
 
 
+## [v1.1.3](https://github.com/devlooped/SmallSharp/tree/v1.1.3) (2021-07-05)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.2...v1.1.3)
+
+:hammer: Other:
+
+- Include package readme for better discoverability in gallery [\#49](https://github.com/devlooped/SmallSharp/issues/49)
+
 ## [v1.1.2](https://github.com/devlooped/SmallSharp/tree/v1.1.2) (2021-05-17)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.1...v1.1.2)
@@ -23,9 +31,7 @@
 
 :twisted_rightwards_arrows: Merged:
 
-- Bump files with dotnet-file sync [\#35](https://github.com/devlooped/SmallSharp/pull/35) (@kzu)
 - Ensure the directory for launchSettings.json exists [\#34](https://github.com/devlooped/SmallSharp/pull/34) (@kzu)
-- Bump files with dotnet-file sync [\#30](https://github.com/devlooped/SmallSharp/pull/30) (@kzu)
 
 ## [v1.1.0](https://github.com/devlooped/SmallSharp/tree/v1.1.0) (2021-02-15)
 
