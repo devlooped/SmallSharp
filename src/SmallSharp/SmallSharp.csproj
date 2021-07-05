@@ -6,6 +6,7 @@
     <Description>Create, edit and run multiple C# 9.0 top-level programs in the same project 😍</Description>
     <PackFolder>build\netstandard2.0</PackFolder>
     <PackNone>true</PackNone>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\readme.md" PackagePath="readme.md" />
     <None Update="SmallSharp.targets" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
     <PackageFile Include="tools\JsonPeek.MSBuild.dll" PackagePath="$(PackFolder)\JsonPeek.MSBuild.dll" PackageReference="JsonPoke.MSBuild" Visible="false" />

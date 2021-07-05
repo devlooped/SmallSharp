@@ -1,9 +1,9 @@
-﻿![Icon](img/icon-32.png) SmallSharp
+﻿![Icon](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/icon-32.png) SmallSharp
 ============
 
 Create, edit and run multiple C# 9.0 top-level programs in the same project 😍
 
-![Icon](img/SmallSharpDemo.gif)
+![Icon](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/SmallSharpDemo.gif)
 
 
 
@@ -35,7 +35,7 @@ There is no need to install any Visual Studio extension. SmallSharp works by jus
 1. Create a new Console (.NET Core):
 
 
-![New Project Dialog](img/NewConsoleProject.png)
+![New Project Dialog](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/NewConsoleProject.png)
 
    By default, this new console project may not be set up to target `net5.0` or use the latest C# version. 
    So click on the project node, and the project file will open in the editor. Make sure you either:
@@ -71,7 +71,7 @@ There is no need to install any Visual Studio extension. SmallSharp works by jus
 
   * From the Dependencies node, Manage NuGet Packages dialog:
 
-![New Project Dialog](img/NuGetPackage.png)
+![New Project Dialog](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/NuGetPackage.png)
 
    * By just adding it directly to the .csproj:
 
@@ -104,7 +104,7 @@ WriteLine("Hello World!");
 
 Keep adding as many top-level programs as you need, and switch between them easily by simply changing the active document.
 
-![Demo](img/TrackSelection.gif)
+![Demo](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/TrackSelection.gif)
 
 ## How It Works
 
