@@ -1,8 +1,8 @@
 
 
-## [v1.1.3](https://github.com/devlooped/SmallSharp/tree/v1.1.3) (2021-07-05)
+## [v1.1.4](https://github.com/devlooped/SmallSharp/tree/v1.1.4) (2021-07-05)
 
-[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.2...v1.1.3)
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.2...v1.1.4)
 
 :hammer: Other:
 
