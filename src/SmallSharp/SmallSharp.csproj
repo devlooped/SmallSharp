@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" Pack="false" />
-    <PackageReference Include="NuGetizer" Version="0.7.4" />
+    <PackageReference Include="NuGetizer" Version="0.7.5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" Pack="false" />
     <PackageReference Include="EnvDTE" Version="16.7.30508.193" PrivateAssets="all" />
