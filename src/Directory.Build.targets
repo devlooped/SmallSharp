@@ -6,6 +6,11 @@
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(IsPackable)' == ''">
+    <IsPackable Condition="'$(PackAsTool)' == 'true'">true</IsPackable>
+    <IsPackable Condition="'$(PackFolder)' != ''">true</IsPackable>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(IsPackable)' == ''">
     <!-- The Sdks\NuGet.Build.Tasks.Pack\build\NuGet.Build.Tasks.Pack.targets unconditionally sets 
         PackageId=AssemblyName if no PackageId is provided, and then defaults IsPackable=true if 
         a PackageId is set (?!), meaning that by default everything is packable in Sdk-style 
@@ -19,6 +24,28 @@
     <IsPackable Condition="'$(PackageId)' == ''">false</IsPackable>
     <IsPackable Condition="'$(PackageId)' != ''">true</IsPackable>
   </PropertyGroup>
+  
+  <ItemGroup Condition="'$(IsPackable)' == 'true'" Label="NuGet">
+    <!-- This is compatible with nugetizer and SDK pack -->
+
+    <!-- Project-level icon/readme will already be part of None items -->
+    <None Update="@(None -> WithMetadataValue('Filename', 'icon'))" 
+          Pack="true" PackagePath="%(Filename)%(Extension)" 
+          Condition="'$(PackageIcon)' != ''" />
+
+    <None Update="@(None -> WithMetadataValue('Filename', 'readme'))" 
+          Pack="true" PackagePath="%(Filename)%(Extension)" 
+          Condition="'$(PackageReadmeFile)' != ''" />
+    
+    <!-- src-level will need explicit inclusion -->
+    <None Include="$(MSBuildThisFileDirectory)icon.png" Link="icon.png" Visible="false" 
+          Pack="true" PackagePath="%(Filename)%(Extension)"
+          Condition="Exists('$(MSBuildThisFileDirectory)icon.png') and !Exists('$(MSBuildProjectDirectory)icon.png')" />
+
+    <None Include="$(MSBuildThisFileDirectory)readme.md" Link="readme.md"  
+          Pack="true" PackagePath="%(Filename)%(Extension)"
+          Condition="Exists('$(MSBuildThisFileDirectory)readme.md') and !Exists('$(MSBuildProjectDirectory)readme.md')" />
+  </ItemGroup>
 
   <!-- Microsoft.NET.Sdk\targets\Microsoft.NET.DefaultAssemblyInfo.targets does this and is imported 
        before Directory.Build.targets, but it's not imported for .msbuildproj -->
@@ -82,8 +109,11 @@
 
   <ItemGroup>
     <!-- Make these available via ThisAssembly.Project -->
+    <ProjectProperty Include="RepositoryBranch" />
     <ProjectProperty Include="RepositorySha" />
     <ProjectProperty Include="RepositoryCommit" />
+    <ProjectProperty Include="RepositoryRoot" />
+    <ProjectProperty Include="RepositoryUrl" />
   </ItemGroup>
 
   <!-- Make sure the source control info is available before calling source generators -->
@@ -102,6 +132,15 @@
       <RepositorySha Condition="'$(RepositorySha)' == ''">$(SourceRevisionId.Substring(0, 9))</RepositorySha>
       <!-- This allows the commit label added to the InformationalVersion to be the short sha instead :) -->
       <SourceRevisionId>$(RepositorySha)</SourceRevisionId>
+    </PropertyGroup>
+
+    <!-- Add SourceRoot as a project property too -->
+    <ItemGroup>
+      <_GitSourceRoot Include="@(SourceRoot -> WithMetadataValue('SourceControl', 'git'))" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <RepositoryRoot>@(_GitSourceRoot)</RepositoryRoot>
     </PropertyGroup>
 
   </Target>
