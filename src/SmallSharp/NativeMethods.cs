@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
-internal static class NativeMethods
+static class NativeMethods
 {
     public const int ERROR_INVALID_PARAMETER = 0x57;
     public const int INVALID_HANDLE_VALUE = -1;

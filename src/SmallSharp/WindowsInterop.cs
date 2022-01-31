@@ -128,7 +128,7 @@ namespace SmallSharp
         }
     }
 
-    internal class OleServiceProvider : IServiceProvider
+    class OleServiceProvider : IServiceProvider
     {
         readonly Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider;
 
