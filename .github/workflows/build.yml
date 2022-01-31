@@ -31,11 +31,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: ⚙ dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
       - name: ✓ ensure format
         run: |
-          dotnet tool update -g dotnet-format --version 5.0.*
           dotnet restore
-          dotnet format --check -v:diag
+          dotnet format --verify-no-changes -v:diag
 
   build:
     name: build-${{ matrix.os }}
@@ -43,7 +47,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-2022, ubuntu-latest, macOS-latest]
     steps:
       - name: 🤘 checkout
         uses: actions/checkout@v2
@@ -51,11 +55,23 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: ⚙ dotnet
+        uses: actions/setup-dotnet@v1
+        if: matrix.os != 'windows-2022'
+        with:
+          dotnet-version: '6.0.x'
+
       - name: 🙏 build
         run: dotnet build -m:1 -p:VersionLabel="$GITHUB_REF.$GITHUB_RUN_NUMBER"
 
+      - name: ⚙ GNU grep
+        if: matrix.os == 'macOS-latest'
+        run: |
+          brew install grep
+          echo 'export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"' >> .bash_profile
+
       - name: 🧪 test
-        run: dotnet test --no-build -m:1 --blame-hang --blame-hang-timeout 5m
+        uses: ./.github/workflows/test
 
       - name: 📦 pack
         run: dotnet pack -m:1 -p:VersionLabel="$GITHUB_REF.$GITHUB_RUN_NUMBER"
