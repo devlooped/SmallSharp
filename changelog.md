@@ -1,4 +1,12 @@
+# Changelog
 
+## [v1.1.5](https://github.com/devlooped/SmallSharp/tree/v1.1.5) (2022-02-03)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.4...v1.1.5)
+
+:sparkles: Implemented enhancements:
+
+- Simplify editing of launchSettings.json by using Devlooped.JsonPoke [\#64](https://github.com/devlooped/SmallSharp/issues/64)
 
 ## [v1.1.4](https://github.com/devlooped/SmallSharp/tree/v1.1.4) (2021-07-05)
 
@@ -100,7 +108,7 @@
 
 ## [v0.2.0](https://github.com/devlooped/SmallSharp/tree/v0.2.0) (2020-10-01)
 
-[Full Changelog](https://github.com/devlooped/SmallSharp/compare/4c2f0df140969a781efd31d5f7e3f320364b5fd8...v0.2.0)
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/b42f339e41771204a132fda34b061236b78c8511...v0.2.0)
 
 
 
