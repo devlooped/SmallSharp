@@ -1,7 +1,7 @@
 <Project>
 
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
-  <UsingTask AssemblyFile="JsonPeek.MSBuild.dll" TaskName="JsonPoke" />
+  <UsingTask AssemblyFile="JsonPoke.dll" TaskName="JsonPoke" />
 
   <PropertyGroup>
     <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
@@ -9,15 +9,16 @@
     <UserProjectNamespace>
       <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
-    <!-- ActiveDebugProfile comes from the .user file, automatically set to the only entry we generate in launchSettings.json -->
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
+    <StartupFile Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">$(ActiveCompile)</StartupFile>
     <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings</StartupFileDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Ensures all top-level files show up in the IDE -->
-    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile)" />
+    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile);$(ActiveCompile)" />
     <Compile Include="$(ActiveDebugProfile)" Condition="Exists('$(ActiveDebugProfile)')" />
+    <Compile Include="$(ActiveCompile)" Condition="Exists('$(ActiveCompile)') and '$(ActiveCompile)' != '$(ActiveDebugProfile)'" />
   </ItemGroup>
 
   <!-- NOTE: we only require VS16.8+ when running in the IDE, since for CLI builds we just do targets stuff -->
@@ -142,27 +143,12 @@
   </Target>
 
   <Target Name="UpdateLaunchSettings">
-    <PropertyGroup>
-      <ProfileJsonPath>$(MSBuildProjectDirectory)\Properties\launchSettings.json</ProfileJsonPath>
-      <!-- Additional metadata to be used for each profile entry -->
-      <ProfileJsonMetadata>@(StartupFile -> '%(Filename)%(Extension)=')</ProfileJsonMetadata>
-      <ProfileJsonMetadataNames>@(StartupFile -> '%(Filename)%(Extension)')</ProfileJsonMetadataNames>
-    </PropertyGroup>
-    <ItemGroup>
-      <ProfileJsonCommandName Include="JObject" commandName="Project" />
-    </ItemGroup>
-    <CreateItem Include="$(ProfileJsonPath)"
-                AdditionalMetadata="$(ProfileJsonMetadata)">
-      <Output ItemName="ProfileJsonWithMetadata" TaskParameter="Include" />
-    </CreateItem>
-    <JsonPoke JsonInputPath="$(ProfileJsonPath)"
-              JObject="@(ProfileJsonWithMetadata)"
-              Metadata="$(ProfileJsonMetadataNames)"
-              JPath="profiles" />
-    <JsonPoke JsonInputPath="$(ProfileJsonPath)"
-              JObject="@(ProfileJsonCommandName)"
-              Metadata="commandName"
-              JPath="$.profiles['%(StartupFile.Filename)%(StartupFile.Extension)']" />
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
+                      Lines="{ }"
+                      Condition="!Exists('$(MSBuildProjectDirectory)\Properties\launchSettings.json')" />
+    <JsonPoke ContentPath="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
+              Query="$.profiles['%(StartupFile.Filename)%(StartupFile.Extension)'].commandName" 
+              Value="Project" />    
   </Target>
 
   <ItemGroup>

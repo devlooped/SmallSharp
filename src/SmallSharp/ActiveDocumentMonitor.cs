@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.Shell.Interop;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace SmallSharp.Build
@@ -70,27 +68,37 @@ namespace SmallSharp.Build
         {
             activeFile = path;
 
+#if DEBUG && !CI
+            //Debugger.Launch();
+#endif
+
             if (!string.IsNullOrEmpty(path) &&
                 path!.IndexOfAny(Path.GetInvalidPathChars()) == -1 &&
                 startupFiles.TryGetValue(Path.GetFileName(path), out var startupFile))
             {
+                // NOTE: we could skip writing the profiles altogether, since the 
+                // targets already JsonPoke these entries. This causes issues, however, 
+                // when the entries there don't match *exactly* what the compile files 
+                // are (i.e. WSL). In this scenario, the project system remains in an 
+                // in-memory "dirty" state where it doesn't refresh the active debug 
+                // profile anymore because it keeps its own WSL selection around.
                 var settings = new JObject(
                     new JProperty("profiles", new JObject(
-                        new JProperty(startupFile, new JObject(
+                        startupFiles.Select(file => new JProperty(file.Key, new JObject(
                             new JProperty("commandName", "Project")
-                        ))
+                        )))
                     ))
                 );
 
-                var json = settings.ToString(Formatting.Indented);
+                var json = settings.ToString(Newtonsoft.Json.Formatting.Indented);
 
                 // Only write if different content.
                 if (File.Exists(launchProfilesPath) &&
-                    File.ReadAllText(launchProfilesPath) == json)
-                    return;
-
-                Directory.CreateDirectory(Path.GetDirectoryName(launchProfilesPath));
-                File.WriteAllText(launchProfilesPath, json);
+                    File.ReadAllText(launchProfilesPath) != json)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(launchProfilesPath));
+                    File.WriteAllText(launchProfilesPath, json);
+                }
 
                 try
                 {
@@ -98,14 +106,66 @@ namespace SmallSharp.Build
                     // since it has to match what the source generator created in the 
                     // launch profiles.
                     var xdoc = XDocument.Load(userFile);
-                    var active = xdoc
+                    var save = false;
+
+                    // The additional ActiveCompile is a prerequisite for supporting non-file 
+                    // debug profiles, such as WSL. At this point, it's not working, but it's 
+                    // will be based on this extra property eventually, so we keep it here.
+
+                    var activeCompile = xdoc
+                        .Descendants("{http://schemas.microsoft.com/developer/msbuild/2003}ActiveCompile")
+                        .FirstOrDefault();
+
+                    if (activeCompile == null)
+                    {
+                        var props = xdoc.Root.Elements("{http://schemas.microsoft.com/developer/msbuild/2003}PropertyGroup").LastOrDefault();
+                        if (props == null)
+                        {
+                            props = new XElement("{http://schemas.microsoft.com/developer/msbuild/2003}PropertyGroup");
+                            xdoc.Root.Add(props);
+                        }
+                        activeCompile = new XElement("{http://schemas.microsoft.com/developer/msbuild/2003}ActiveCompile", startupFile);
+                        props.Add(activeCompile);
+                        save = true;
+                    }
+
+                    if (!startupFile.Equals(activeCompile.Value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        activeCompile.Value = startupFile;
+                        save = true;
+                    }
+
+                    var activeDebug = xdoc
                         .Descendants("{http://schemas.microsoft.com/developer/msbuild/2003}ActiveDebugProfile")
                         .FirstOrDefault();
 
-                    if (active != null && !startupFile.Equals(active.Value, StringComparison.OrdinalIgnoreCase))
+                    if (activeDebug == null)
                     {
-                        active.Value = startupFile;
+                        var props = xdoc.Root.Elements("{http://schemas.microsoft.com/developer/msbuild/2003}PropertyGroup").LastOrDefault();
+                        if (props == null)
+                        {
+                            props = new XElement("{http://schemas.microsoft.com/developer/msbuild/2003}PropertyGroup");
+                            xdoc.Root.Add(props);
+                        }
+                        activeDebug = new XElement("{http://schemas.microsoft.com/developer/msbuild/2003}ActiveDebugProfile", startupFile);
+                        props.Add(activeDebug);
+                        save = true;
+                    }
+
+                    if (activeDebug.Value != null &&
+                        activeDebug.Value.IndexOfAny(Path.GetInvalidPathChars()) == -1 &&
+                        // TODO: Don't mess with debug profile unless it's a file-like name, so we can support WSL
+                        // Path.HasExtension(activeDebug.Value) && 
+                        !startupFile.Equals(activeDebug.Value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        activeDebug.Value = startupFile;
+                        save = true;
+                    }
+
+                    if (save)
+                    {
                         xdoc.Save(userFile);
+                        File.SetLastWriteTime(launchProfilesPath, DateTime.Now);
                     }
                 }
                 catch (Exception e)
@@ -186,13 +246,13 @@ namespace SmallSharp.Build
         int IVsRunningDocTableEvents.OnAfterDocumentWindowHide(uint docCookie, IVsWindowFrame pFrame) => 0;
         int IVsSelectionEvents.OnElementValueChanged(uint elementid, object varValueOld, object varValueNew) => 0;
         int IVsSelectionEvents.OnCmdUIContextChanged(uint dwCmdUICookie, int fActive) => 0;
-        int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnQueryCloseSolution(object pUnkReserved, ref int pfCancel) => throw new NotImplementedException();
-        int IVsSolutionEvents.OnAfterCloseSolution(object pUnkReserved) => throw new NotImplementedException();
+        int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded) => 0;
+        int IVsSolutionEvents.OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel) => 0;
+        int IVsSolutionEvents.OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved) => 0;
+        int IVsSolutionEvents.OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy) => 0;
+        int IVsSolutionEvents.OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel) => 0;
+        int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution) => 0;
+        int IVsSolutionEvents.OnQueryCloseSolution(object pUnkReserved, ref int pfCancel) => 0;
+        int IVsSolutionEvents.OnAfterCloseSolution(object pUnkReserved) => 0;
     }
 }
