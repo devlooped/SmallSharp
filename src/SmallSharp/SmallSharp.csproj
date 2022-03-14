@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" Pack="false" />
     <PackageReference Include="NuGetizer" Version="0.7.5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.0.0" Pack="false" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.1.0" Pack="false" />
     <PackageReference Include="EnvDTE" Version="16.10.31320.204" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.10.31320.204" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.10.31320.204" PrivateAssets="all" />
