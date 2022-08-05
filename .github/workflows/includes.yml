@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: +M▼ includes
-        uses: devlooped/actions-include@v3
+        uses: devlooped/actions-include@v4
 
       - name: ✍ pull request
         uses: peter-evans/create-pull-request@v3
