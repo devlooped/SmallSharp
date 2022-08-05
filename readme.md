@@ -1,4 +1,4 @@
-﻿![Icon](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/icon-32.png) SmallSharp
+![Icon](https://raw.githubusercontent.com/devlooped/SmallSharp/main/img/icon-32.png) SmallSharp
 ============
 
 Create, edit and run multiple C# 9.0 top-level programs in the same project 😍
@@ -124,3 +124,43 @@ This basically mean that this it will also work consistently if you use `dotnet 
 Finally, there is some lovely COM-based magic to access the active Visual Studio IDE (via DTE) to monitor the currently opened source file to keep it in sync with the launch profile. This is done purely using public COM primitives and equally public VSSDK nuget packages their APIs. This enables some useful integration with the IDE without requiring installing a VS extension from the marketplace and deal with gracefully degrading functionality.
 
 <!-- include docs/footer.md -->
+# Sponsors 
+
+<!-- include sponsors.md -->
+<!-- sponsors -->
+
+<a href='https://github.com/KirillOsenkov'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/KirillOsenkov.svg' alt='Kirill Osenkov' title='Kirill Osenkov'>
+</a>
+<a href='https://github.com/augustoproiete'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/augustoproiete.svg' alt='C. Augusto Proiete' title='C. Augusto Proiete'>
+</a>
+<a href='https://github.com/sandrock'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/sandrock.svg' alt='SandRock' title='SandRock'>
+</a>
+<a href='https://github.com/aws'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/aws.svg' alt='Amazon Web Services' title='Amazon Web Services'>
+</a>
+<a href='https://github.com/MelbourneDeveloper'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/MelbourneDeveloper.svg' alt='Christian Findlay' title='Christian Findlay'>
+</a>
+<a href='https://github.com/clarius'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/clarius.svg' alt='Clarius Org' title='Clarius Org'>
+</a>
+<a href='https://github.com/MFB-Technologies-Inc'>
+  <img src='https://github.com/devlooped/sponsors/raw/main/.github/avatars/MFB-Technologies-Inc.svg' alt='MFB Technologies, Inc.' title='MFB Technologies, Inc.'>
+</a>
+
+<!-- sponsors -->
+
+<!-- sponsors.md -->
+
+<br><br>
+<a href="https://github.com/sponsors/devlooped" title="Sponsor this project">
+  <img src="https://github.com/devlooped/sponsors/blob/main/sponsor.png" />
+</a>
+<br>
+
+[Learn more about GitHub Sponsors](https://github.com/sponsors)
+
+<!-- docs/footer.md -->
