@@ -122,3 +122,5 @@ b. Explicitly include as `<Compile>` only the `$(ActiveDebugProfile)` property v
 This basically mean that this it will also work consistently if you use `dotnet run` from the command-line, since the "Main" file selection is performed exclusively via MSBuild item manipulation.
 
 Finally, there is some lovely COM-based magic to access the active Visual Studio IDE (via DTE) to monitor the currently opened source file to keep it in sync with the launch profile. This is done purely using public COM primitives and equally public VSSDK nuget packages their APIs. This enables some useful integration with the IDE without requiring installing a VS extension from the marketplace and deal with gracefully degrading functionality.
+
+<!-- include docs/footer.md -->
