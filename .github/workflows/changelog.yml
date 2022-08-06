@@ -4,26 +4,24 @@ on:
     types: [released]
   workflow_dispatch:
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 jobs:
   changelog:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔍 GH_TOKEN
-        if: env.GH_TOKEN == ''
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
-
       - name: 🤘 checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: main
-          token: ${{ env.GH_TOKEN }}
 
+      - name: 🔍 defaults
+        uses: ./.github/workflows/defaults
+        env:
+          GH_TOKEN_SECRET: ${{ secrets.GH_TOKEN }}
+          BOT_NAME_SECRET: ${{ secrets.BOT_NAME }}
+          BOT_EMAIL_SECRET: ${{ secrets.BOT_EMAIL }}
+          BOT_AUTHOR_SECRET: ${{ secrets.BOT_AUTHOR }}
+          
       - name: ⚙ ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -36,7 +34,7 @@ jobs:
 
       - name: 🚀 changelog
         run: |
-          git config --local user.name github-actions
-          git config --local user.email github-actions@github.com
+          git config --local user.name $BOT_NAME
+          git config --local user.email $BOT_EMAIL
           git add changelog.md
           (git commit -m "🖉 Update changelog with ${GITHUB_REF#refs/*/}" && git push) || echo "Done"
