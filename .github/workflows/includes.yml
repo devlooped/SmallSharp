@@ -14,6 +14,14 @@ jobs:
       - name: 🤘 checkout
         uses: actions/checkout@v2
 
+      - name: 🔍 defaults
+        uses: ./.github/workflows/defaults
+        env:
+          GH_TOKEN_SECRET: ${{ secrets.GH_TOKEN }}
+          BOT_NAME_SECRET: ${{ secrets.BOT_NAME }}
+          BOT_EMAIL_SECRET: ${{ secrets.BOT_EMAIL }}
+          BOT_AUTHOR_SECRET: ${{ secrets.BOT_AUTHOR }}
+
       - name: +M▼ includes
         uses: devlooped/actions-include@v4
 
@@ -23,6 +31,10 @@ jobs:
           base: main
           branch: markdown-includes
           delete-branch: true
+          labels: dependencies
+          author: ${{ env.BOT_AUTHOR }}
+          committer: ${{ env.BOT_AUTHOR }}
           commit-message: +M▼ includes
           title: +M▼ includes
           body: +M▼ includes
+          token: ${{ env.GH_TOKEN }}

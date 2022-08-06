@@ -9,18 +9,24 @@ on:
 
 env:
   DOTNET_NOLOGO: true
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   sync:
     runs-on: windows-latest
     steps:
-      - name: 🔍 GH_TOKEN
-        if: env.GH_TOKEN == ''
-        shell: bash
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
+      - name: 🤘 checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: 🔍 defaults
+        uses: ./.github/workflows/defaults
+        env:
+          GH_TOKEN_SECRET: ${{ secrets.GH_TOKEN }}
+          BOT_NAME_SECRET: ${{ secrets.BOT_NAME }}
+          BOT_EMAIL_SECRET: ${{ secrets.BOT_EMAIL }}
+          BOT_AUTHOR_SECRET: ${{ secrets.BOT_AUTHOR }}
 
       - name: ⌛ rate
         shell: pwsh
@@ -37,13 +43,6 @@ jobs:
               $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
               echo "Rate limit has reset to $($rate.remaining) requests"
           }
-
-      - name: 🤘 checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: main
-          token: ${{ env.GH_TOKEN }}
 
       - name: 🔄 sync
         shell: pwsh
@@ -70,9 +69,11 @@ jobs:
           branch: dotnet-file-sync
           delete-branch: true
           labels: dependencies
+          author: ${{ env.BOT_AUTHOR }}
+          committer: ${{ env.BOT_AUTHOR }}
           commit-message: ⬆️ Bump files with dotnet-file sync
           
             ${{ env.CHANGES }}
-          title: "Bump files with dotnet-file sync"
+          title: "⬆️ Bump files with dotnet-file sync"
           body: ${{ env.CHANGES }}
           token: ${{ env.GH_TOKEN }}
