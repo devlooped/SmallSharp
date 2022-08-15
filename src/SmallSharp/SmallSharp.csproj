@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.0.0" Pack="false" />
     <PackageReference Include="EnvDTE" Version="16.10.31320.204" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.10.31320.204" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.10.31320.204" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="17.3.32804.24" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="16.10.31320.204" PrivateAssets="all" />
     <PackageReference Include="JsonPoke" Version="1.1.6" GeneratePathProperty="true" Pack="false" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" Pack="false" />
