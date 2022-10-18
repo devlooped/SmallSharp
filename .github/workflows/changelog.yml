@@ -1,26 +1,27 @@
 ﻿name: changelog
 on:
+  workflow_dispatch:
   release:
     types: [released]
-  workflow_dispatch:
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
     steps:
+      - name: 🤖 defaults
+        uses: devlooped/actions-bot@v1
+        with:
+          name: ${{ secrets.BOT_NAME }}
+          email: ${{ secrets.BOT_EMAIL }}
+          gh_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: 🤘 checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: main
-
-      - name: 🔍 defaults
-        uses: ./.github/workflows/defaults
-        env:
-          GH_TOKEN_SECRET: ${{ secrets.GH_TOKEN }}
-          BOT_NAME_SECRET: ${{ secrets.BOT_NAME }}
-          BOT_EMAIL_SECRET: ${{ secrets.BOT_EMAIL }}
-          BOT_AUTHOR_SECRET: ${{ secrets.BOT_AUTHOR }}
+          token: ${{ env.GH_TOKEN }}
           
       - name: ⚙ ruby
         uses: ruby/setup-ruby@v1
@@ -30,11 +31,9 @@ jobs:
       - name: ⚙ changelog
         run: |
           gem install github_changelog_generator 
-          github_changelog_generator --user ${GITHUB_REPOSITORY%/*} --project ${GITHUB_REPOSITORY##*/} --token ${{ secrets.GITHUB_TOKEN }} --o changelog.md --config-file .github/.github_changelog_generator
+          github_changelog_generator --user ${GITHUB_REPOSITORY%/*} --project ${GITHUB_REPOSITORY##*/} --token $GH_TOKEN --o changelog.md --config-file .github/.github_changelog_generator
 
       - name: 🚀 changelog
         run: |
-          git config --local user.name $BOT_NAME
-          git config --local user.email $BOT_EMAIL
           git add changelog.md
           (git commit -m "🖉 Update changelog with ${GITHUB_REF#refs/*/}" && git push) || echo "Done"
