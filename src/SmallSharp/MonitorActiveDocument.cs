@@ -18,8 +18,15 @@ public class MonitorActiveDocument : Task
     [Required]
     public ITaskItem[] StartupFiles { get; set; } = Array.Empty<ITaskItem>();
 
+    public string? Debugger { get; set; }
+
     public override bool Execute()
     {
+        if (bool.TryParse(Debugger, out var debugger) && debugger)
+        {
+            System.Diagnostics.Debugger.Launch();
+        }
+
         if (string.IsNullOrEmpty(LaunchProfiles) ||
             string.IsNullOrEmpty(UserFile))
         {

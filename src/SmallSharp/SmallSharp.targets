@@ -30,7 +30,8 @@
   <Target Name="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" AfterTargets="CompileDesignTime" DependsOnTargets="CollectStartupFile">
     <MonitorActiveDocument LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
                            UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))"
-                           StartupFiles="@(StartupFile)" />
+                           StartupFiles="@(StartupFile)"
+                           Debugger="$(DebugSmallSharp)"/>
   </Target>
 
   <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
