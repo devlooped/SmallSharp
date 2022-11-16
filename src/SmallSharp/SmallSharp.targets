@@ -1,7 +1,6 @@
 <Project>
 
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
-  <UsingTask AssemblyFile="JsonPoke.dll" TaskName="JsonPoke" />
 
   <PropertyGroup>
     <!-- Excluding top-level files so we can only set to Compile the startup/active one -->

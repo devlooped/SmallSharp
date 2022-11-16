@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace SmallSharp.Build
+namespace SmallSharp;
+
+class DisposableAction : IDisposable
 {
-    class DisposableAction : IDisposable
-    {
-        readonly Action action;
+    readonly Action action;
 
-        public DisposableAction(Action action) => this.action = action;
+    public DisposableAction(Action action) => this.action = action;
 
-        public void Dispose() => action();
-    }
+    public void Dispose() => action();
 }

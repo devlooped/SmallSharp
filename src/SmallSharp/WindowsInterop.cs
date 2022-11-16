@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,174 +7,169 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace SmallSharp
+namespace SmallSharp;
+
+static class WindowsInterop
 {
-    static class WindowsInterop
+    static readonly Regex versionExpr = new(@"Microsoft Visual Studio (?<version>\d\d\.\d)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+    public static IServiceProvider? GetServiceProvider(TimeSpan delay = default)
     {
-        static readonly Regex versionExpr = new Regex(@"Microsoft Visual Studio (?<version>\d\d\.\d)", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            return null;
 
-        public static IServiceProvider? GetServiceProvider(TimeSpan delay = default)
+        if (delay != default)
+            Thread.Sleep(delay);
+
+        try
         {
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+
+            var dte = GetDTE();
+            if (dte == null)
                 return null;
 
-            if (delay != default)
-                Thread.Sleep(delay);
-
-            try
-            {
-
-                var dte = GetDTE();
-                if (dte == null)
-                    return null;
-
-                return new OleServiceProvider(dte);
-            }
-            catch (Exception e)
-            {
-                Debug.Fail($"Failed to get IDE service provider: {e}");
-                return null;
-            }
+            return new OleServiceProvider(dte);
         }
-
-        static EnvDTE.DTE? GetDTE()
+        catch (Exception e)
         {
-            var window = NativeMethods.GetForegroundWindow();
-            var process = Process.GetProcessesByName("devenv").FirstOrDefault(x => x.MainWindowHandle == window);
-
-            if (process == null)
-                return null;
-
-            var devEnv = process.MainModule.FileName;
-            var version = versionExpr.Match(devEnv).Groups["version"];
-            if (!version.Success)
-            {
-                var ini = Path.ChangeExtension(devEnv, "isolation.ini");
-                if (!File.Exists(ini))
-                    throw new NotSupportedException("Could not determine Visual Studio version from running process from " + devEnv);
-
-                if (!Version.TryParse(File
-                        .ReadAllLines(ini)
-                        .Where(line => line.StartsWith("InstallationVersion=", StringComparison.Ordinal))
-                        .FirstOrDefault()?
-                        .Substring(20), out var v))
-                    throw new NotSupportedException("Could not determine the version of Visual Studio from devenv.isolation.ini at " + ini);
-
-                return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}.0:{2}",
-                    "VisualStudio.DTE", v.Major, process.Id), TimeSpan.FromSeconds(2));
-            }
-            else
-            {
-                return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}:{2}",
-                    "VisualStudio.DTE", version.Value, process.Id), TimeSpan.FromSeconds(2));
-            }
-        }
-
-        static T? GetComObject<T>(string monikerName, TimeSpan retryTimeout)
-        {
-            object? comObject;
-            var stopwatch = Stopwatch.StartNew();
-            do
-            {
-                comObject = GetComObject(monikerName);
-                if (comObject != null)
-                    break;
-
-                System.Threading.Thread.Sleep(100);
-            }
-
-            while (stopwatch.Elapsed < retryTimeout);
-
-            return (T?)comObject;
-        }
-
-        static object? GetComObject(string monikerName)
-        {
-            object? comObject = null;
-            try
-            {
-                IRunningObjectTable table;
-                IEnumMoniker moniker;
-                if (NativeMethods.Failed(NativeMethods.GetRunningObjectTable(0, out table)))
-                    return null;
-
-                table.EnumRunning(out moniker);
-                moniker.Reset();
-                var pceltFetched = IntPtr.Zero;
-                var rgelt = new IMoniker[1];
-
-                while (moniker.Next(1, rgelt, pceltFetched) == 0)
-                {
-                    IBindCtx ctx;
-                    if (!NativeMethods.Failed(NativeMethods.CreateBindCtx(0, out ctx)))
-                    {
-                        string displayName;
-                        rgelt[0].GetDisplayName(ctx, null, out displayName);
-                        if (displayName == monikerName)
-                        {
-                            table.GetObject(rgelt[0], out comObject);
-                            return comObject;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            return comObject;
+            Debug.Fail($"Failed to get IDE service provider: {e}");
+            return null;
         }
     }
 
-    class OleServiceProvider : IServiceProvider
+    static EnvDTE.DTE? GetDTE()
     {
-        readonly Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider;
+        var window = NativeMethods.GetForegroundWindow();
+        var process = Process.GetProcessesByName("devenv").FirstOrDefault(x => x.MainWindowHandle == window);
 
-        public OleServiceProvider(Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider)
-            => this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        if (process == null)
+            return null;
 
-        public OleServiceProvider(EnvDTE.DTE dte)
-            : this((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte) { }
-
-        public object? GetService(Type serviceType)
-            => GetService((serviceType ?? throw new ArgumentNullException(nameof(serviceType))).GUID);
-
-        object? GetService(Guid guid)
+        var devEnv = process.MainModule.FileName;
+        var version = versionExpr.Match(devEnv).Groups["version"];
+        if (!version.Success)
         {
-            if (guid == Guid.Empty)
+            var ini = Path.ChangeExtension(devEnv, "isolation.ini");
+            if (!File.Exists(ini))
+                throw new NotSupportedException("Could not determine Visual Studio version from running process from " + devEnv);
+
+            if (!Version.TryParse(File
+                    .ReadAllLines(ini)
+                    .Where(line => line.StartsWith("InstallationVersion=", StringComparison.Ordinal))
+                    .FirstOrDefault()?
+                    .Substring(20), out var v))
+                throw new NotSupportedException("Could not determine the version of Visual Studio from devenv.isolation.ini at " + ini);
+
+            return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}.0:{2}",
+                "VisualStudio.DTE", v.Major, process.Id), TimeSpan.FromSeconds(2));
+        }
+        else
+        {
+            return GetComObject<EnvDTE.DTE>(string.Format("!{0}.{1}:{2}",
+                "VisualStudio.DTE", version.Value, process.Id), TimeSpan.FromSeconds(2));
+        }
+    }
+
+    static T? GetComObject<T>(string monikerName, TimeSpan retryTimeout)
+    {
+        object? comObject;
+        var stopwatch = Stopwatch.StartNew();
+        do
+        {
+            comObject = GetComObject(monikerName);
+            if (comObject != null)
+                break;
+
+            Thread.Sleep(100);
+        }
+
+        while (stopwatch.Elapsed < retryTimeout);
+
+        return (T?)comObject;
+    }
+
+    static object? GetComObject(string monikerName)
+    {
+        object? comObject = null;
+        try
+        {
+            if (NativeMethods.Failed(NativeMethods.GetRunningObjectTable(0, out var table)))
                 return null;
 
-            if (guid == NativeMethods.IID_IServiceProvider)
-                return serviceProvider;
+            table.EnumRunning(out var moniker);
+            moniker.Reset();
+            var pceltFetched = IntPtr.Zero;
+            var rgelt = new IMoniker[1];
 
-            try
+            while (moniker.Next(1, rgelt, pceltFetched) == 0)
             {
-                var riid = NativeMethods.IID_IUnknown;
-                if (NativeMethods.Succeeded(serviceProvider.QueryService(ref guid, ref riid, out var zero)) && (IntPtr.Zero != zero))
+                if (!NativeMethods.Failed(NativeMethods.CreateBindCtx(0, out var ctx)))
                 {
-                    try
+                    rgelt[0].GetDisplayName(ctx, null, out var displayName);
+                    if (displayName == monikerName)
                     {
-                        return Marshal.GetObjectForIUnknown(zero);
-                    }
-                    finally
-                    {
-                        Marshal.Release(zero);
+                        table.GetObject(rgelt[0], out comObject);
+                        return comObject;
                     }
                 }
             }
-            catch (Exception exception) when (
-                exception is OutOfMemoryException ||
-                exception is StackOverflowException ||
-                exception is AccessViolationException ||
-                exception is AppDomainUnloadedException ||
-                exception is BadImageFormatException ||
-                exception is DivideByZeroException)
-            {
-                throw;
-            }
-
+        }
+        catch
+        {
             return null;
         }
+
+        return comObject;
+    }
+}
+
+class OleServiceProvider : IServiceProvider
+{
+    readonly Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider;
+
+    public OleServiceProvider(Microsoft.VisualStudio.OLE.Interop.IServiceProvider serviceProvider)
+        => this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+    public OleServiceProvider(EnvDTE.DTE dte)
+        : this((Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte) { }
+
+    public object? GetService(Type serviceType)
+        => GetService((serviceType ?? throw new ArgumentNullException(nameof(serviceType))).GUID);
+
+    object? GetService(Guid guid)
+    {
+        if (guid == Guid.Empty)
+            return null;
+
+        if (guid == NativeMethods.IID_IServiceProvider)
+            return serviceProvider;
+
+        try
+        {
+            var riid = NativeMethods.IID_IUnknown;
+            if (NativeMethods.Succeeded(serviceProvider.QueryService(ref guid, ref riid, out var zero)) && (IntPtr.Zero != zero))
+            {
+                try
+                {
+                    return Marshal.GetObjectForIUnknown(zero);
+                }
+                finally
+                {
+                    Marshal.Release(zero);
+                }
+            }
+        }
+        catch (Exception exception) when (
+            exception is OutOfMemoryException ||
+            exception is StackOverflowException ||
+            exception is AccessViolationException ||
+            exception is AppDomainUnloadedException ||
+            exception is BadImageFormatException ||
+            exception is DivideByZeroException)
+        {
+            throw;
+        }
+
+        return null;
     }
 }

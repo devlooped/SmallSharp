@@ -1,15 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30516.212
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5420D663-3EA6-419B-8F73-C7EA374CFBBE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.netconfig = .netconfig
-		.github\dependabot.yml = .github\dependabot.yml
-		src\Directory.Build.props = src\Directory.Build.props
-		src\Directory.Build.targets = src\Directory.Build.targets
 		src\Directory.props = src\Directory.props
 		readme.md = readme.md
 	EndProjectSection
@@ -17,12 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{FFAB61A4-707D-4C79-A364-BF259FA865BB}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
-		.github\workflows\changelog.yml = .github\workflows\changelog.yml
-		.github\workflows\pages.yml = .github\workflows\pages.yml
 		.github\workflows\publish.yml = .github\workflows\publish.yml
-		.github\workflows\release-notes.yml = .github\workflows\release-notes.yml
-		.github\workflows\sponsors.ps1 = .github\workflows\sponsors.ps1
-		.github\workflows\sponsors.yml = .github\workflows\sponsors.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp", "src\SmallSharp\SmallSharp.csproj", "{97648980-AA30-4AC0-B8E9-FCF6359F56A0}"
