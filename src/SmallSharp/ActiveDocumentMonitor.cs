@@ -11,9 +11,9 @@ namespace SmallSharp;
 
 class ActiveDocumentMonitor : MarshalByRefObject, IDisposable, IVsRunningDocTableEvents, IVsSelectionEvents, IVsSolutionEvents
 {
-    readonly IVsSolution? solution;
-    readonly IVsRunningDocumentTable? rdt;
-    readonly IVsMonitorSelection? selection;
+    IVsSolution? solution;
+    IVsRunningDocumentTable? rdt;
+    IVsMonitorSelection? selection;
 
     uint solutionCookie;
     uint rdtCookie;
@@ -191,6 +191,9 @@ class ActiveDocumentMonitor : MarshalByRefObject, IDisposable, IVsRunningDocTabl
             Try(() => selection.UnadviseSelectionEvents(selectionCookie));
 
         selectionCookie = 0;
+        solution = null;
+        rdt = null;
+        selection = null;
     }
 
     void Try(Action action)
