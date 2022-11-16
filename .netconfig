@@ -172,7 +172,7 @@
 	etag = 10106929413a89658d22c36b5b934c598809e1deb8cdd994ec846f824195aac6
 	weak
 [file ".github/workflows/sponsor.yml"]
-	url = https://github.com/devlooped/.github/blob/main/.github/workflows/sponsor.yml
+	url = https://github.com/devlooped/oss/blob/main/.github/workflows/sponsor.yml
 	sha = e347e5c7b91aaeb11eff95037c2c0b54206cc976
 	etag = 06319ff741c03cf4cd5113926d490ec09999a85b5a0e0480ce44222db026341a
 	weak
