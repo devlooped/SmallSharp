@@ -1,12 +1,19 @@
 # Changelog
 
+## [v1.1.7](https://github.com/devlooped/SmallSharp/tree/v1.1.7) (2022-11-16)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.6...v1.1.7)
+
+:sparkles: Implemented enhancements:
+
+- Make SmallSharp a development dependency [\#95](https://github.com/devlooped/SmallSharp/issues/95)
+
 ## [v1.1.6](https://github.com/devlooped/SmallSharp/tree/v1.1.6) (2022-11-16)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.5...v1.1.6)
 
 :twisted_rightwards_arrows: Merged:
 
-- +Mᐁ includes [\#93](https://github.com/devlooped/SmallSharp/pull/93) (@devlooped-bot)
 - +M▼ includes [\#79](https://github.com/devlooped/SmallSharp/pull/79) (@github-actions[bot])
 - +M▼ includes [\#76](https://github.com/devlooped/SmallSharp/pull/76) (@github-actions[bot])
 
