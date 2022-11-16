@@ -1,6 +1,6 @@
 [file]
 	url = https://github.com/devlooped/oss
-	url = https://github.com/devlooped/.github
+	url = https://github.com/clarius/pages
 [file ".netconfig"]
 	url = https://github.com/devlooped/oss/blob/main/.netconfig
     skip
@@ -127,12 +127,12 @@
 	weak
 	sha = a0f58a6d63e48ae6e55944c556d0bc94476dc8df
 [file ".github/workflows/pages.yml"]
-	url = https://github.com/devlooped/.github/blob/main/.github/workflows/pages.yml
+	url = https://github.com/clarius/pages/blob/main/.github/workflows/pages.yml
 	etag = 42fdc888e07b492cccc6fd29972bd9ea6f13691a3fdf057e07f3f8eec9330b7a
 	weak
 	sha = e8f3774884afda36ac177c4193929d24d7901de9
 [file "Gemfile"]
-	url = https://github.com/devlooped/.github/blob/main/Gemfile
+	url = https://github.com/clarius/pages/blob/main/Gemfile
 	etag = d45832acd078778ffebf260000f6d25172a131f51684744d7e982da2a47170ce
 	weak
 	sha = f2dc1370469bec1b2d32d82faf659b050cdc7e2a
