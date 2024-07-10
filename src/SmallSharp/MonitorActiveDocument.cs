@@ -66,6 +66,7 @@ public class MonitorActiveDocument : Task
                 }
 
                 Debug.Fail("Failed to get IServiceProvider to monitor for active document.");
+                Log.LogWarning("Failed to get IServiceProvider to monitor for active document.");
             }
             else
             {
