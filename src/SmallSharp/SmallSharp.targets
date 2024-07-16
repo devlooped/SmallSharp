@@ -146,14 +146,33 @@
     <WriteLinesToFile File="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
                       Lines="{ }"
                       Condition="!Exists('$(MSBuildProjectDirectory)\Properties\launchSettings.json')" />
+    <SortItems Items="@(StartupFile)">
+      <Output TaskParameter="SortedItems" ItemName="SortedStartupFile" />
+    </SortItems>
     <JsonPoke ContentPath="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
-              Query="$.profiles['%(StartupFile.Filename)%(StartupFile.Extension)'].commandName" 
-              Value="Project" />    
+              Query="$.profiles['%(SortedStartupFile.Filename)%(SortedStartupFile.Extension)'].commandName"
+              Value="Project" />
   </Target>
 
   <ItemGroup>
     <!-- Ensure changes we make to this file trigger a new DTB -->
     <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
   </ItemGroup>
+
+  <UsingTask TaskName="SortItems" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <!-- ITaskItem[] input and sorted output -->
+      <Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <SortedItems ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        SortedItems = Items.OrderBy(i => i.ItemSpec).ToArray();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
 
 </Project>
