@@ -34,7 +34,7 @@
                            Debugger="$(DebugSmallSharp)"/>
   </Target>
 
-  <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
+  <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
 
   <Target Name="CollectStartupFile">
     <ItemGroup>
@@ -48,6 +48,7 @@
            causing those items to be hardcoded in the .csproj -->
       <Compile Remove="@(Compile -> WithMetadataValue('RelativeDir', ''))" />
       <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
+      <UpToDateCheckInput Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
     </ItemGroup>
   </Target>
 
