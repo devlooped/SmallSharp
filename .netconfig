@@ -38,9 +38,9 @@
 	sha = 49661dbf0720cde93eb5569be7523b5912351560
 [file ".github/workflows/build.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/build.yml
-	etag = 20ef46203325f5b3d06a991f8b38c24bcea49fd74d39062a62003448e2dd8b0a
+	etag = 35b2a5b03c26cbe7522e30b2b987e04991e8ba18accd38b7ebd88191f1698c2d
 	weak
-	sha = 65f89e06ed7b2ac33ed3b729adc865b7076840d8
+	sha = 7ec91019eddb4fc7e0b09118538b256087f82e18
 [file ".github/workflows/changelog.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/changelog.yml
 	etag = ad1efa56d6024ee1add2bcda81a7e4e38d0e9069473c6ff70374d5ce06af1f5a
@@ -48,9 +48,9 @@
 	sha = 5fb172362c767bef7c36478f1a6bdc264723f8f9
 [file ".github/workflows/publish.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/publish.yml
-	etag = 105db682c332b2bb0873e60a7d2da45b00fe7d83da0f0e7dbf9a84bc5be77c25
+	etag = 5a85d51e8c6cc6fbda43e12b3712a1e908a8e99b0908c4033ac9f4c66e5f233e
 	weak
-	sha = 40ee833a83d843c242914599e2635ca9a05aa837
+	sha = b5bb972199aa6ff220dda196588b23c21bb2780f
 [file ".github/workflows/release-artifacts.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/release-artifacts.yml
     skip
@@ -108,11 +108,6 @@
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/dotnet-file.yml
 	sha = 7afe350f7e80a230e922db026d4e1198ba15cae1
 	etag = 65e9794df6caff779eb989c8f71ddf4d4109b24a75af79e4f8d0fe6ba7bd9702
-	weak
-[file ".github/workflows/test/action.yml"]
-	url = https://github.com/devlooped/oss/blob/main/.github/workflows/test/action.yml
-	sha = 9a1b07589b9bde93bc12528e9325712a32dec418
-	etag = b54216ac431a83ce5477828d391f02046527e7f6fffd21da1d03324d352c3efb
 	weak
 [file ".github/workflows/includes.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/includes.yml
