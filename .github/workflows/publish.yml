@@ -18,7 +18,7 @@ env:
     
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.PUBLISH_AGENT || 'ubuntu-latest' }}
     steps:
       - name: 🤘 checkout
         uses: actions/checkout@v4
@@ -30,7 +30,9 @@ jobs:
         run: dotnet build -m:1 -bl:build.binlog
 
       - name: 🧪 test
-        uses: ./.github/workflows/test
+        run: |
+          dotnet tool update -g dotnet-retest
+          dotnet retest -- --no-build
 
       - name: 🐛 logs
         uses: actions/upload-artifact@v3
@@ -42,13 +44,14 @@ jobs:
       - name: 🚀 nuget
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        if: env.NUGET_API_KEY != ''
-        run: dotnet nuget push ./bin/**/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+        if: ${{ env.NUGET_API_KEY != '' && github.event.action != 'prereleased' }}
+        working-directory: bin
+        run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
 
       - name: 🚀 sleet
         env:
           SLEET_CONNECTION: ${{ secrets.SLEET_CONNECTION }}
         if: env.SLEET_CONNECTION != ''
         run: |
-          dotnet tool install -g --version 4.0.18 sleet 
+          dotnet tool update sleet -g --allow-downgrade --version $(curl -s --compressed ${{ vars.SLEET_FEED_URL }} | jq '.["sleet:version"]' -r)        
           sleet push bin --config none -f --verbose -p "SLEET_FEED_CONTAINER=nuget" -p "SLEET_FEED_CONNECTIONSTRING=${{ secrets.SLEET_CONNECTION }}" -p "SLEET_FEED_TYPE=azure" || echo "No packages found"
