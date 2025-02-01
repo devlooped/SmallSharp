@@ -38,9 +38,9 @@
 	sha = 49661dbf0720cde93eb5569be7523b5912351560
 [file ".github/workflows/build.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/build.yml
-	etag = f358acb1e45596bf0aad49996017da44939de30b805289c4ad205a7ccb6f99cb
+	etag = 36d2f759807d55f3aa76e6c64ebbf4ed6616f74cfbb9774634fa7375c895dc12
 	weak
-	sha = 5e17ad62ebb5241555a7a4d29e3ab15e5ba120d2
+	sha = 64141f15e2a032f2c167df972206f05615612bd8
 [file ".github/workflows/changelog.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/changelog.yml
 	etag = ad1efa56d6024ee1add2bcda81a7e4e38d0e9069473c6ff70374d5ce06af1f5a
@@ -48,9 +48,9 @@
 	sha = 5fb172362c767bef7c36478f1a6bdc264723f8f9
 [file ".github/workflows/publish.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/publish.yml
-	etag = 2cc96046d8f28e7cbcde89ed56d3d89e1a70fb0de7846ee1827bee66b7dfbcf1
+	etag = d63da2dbd37be35261432991793a4af0749447584406db7468db258bfe5623cb
 	weak
-	sha = 5e17ad62ebb5241555a7a4d29e3ab15e5ba120d2
+	sha = 64141f15e2a032f2c167df972206f05615612bd8
 [file ".github/workflows/release-artifacts.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/release-artifacts.yml
     skip
@@ -111,13 +111,13 @@
 	weak
 [file ".github/workflows/includes.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/includes.yml
-	sha = d152e7437fd0d6f6d9363d23cb3b78c07335ea49
-	etag = ec40db34f379d0c6d83b2ec15624f330318a172cc4f85b5417c63e86eaf601df
+	sha = 85829f2510f335f4a411867f3dbaaa116c3ab3de
+	etag = 086f6b6316cc6ea7089c0dcc6980be519e6ed6e6201e65042ef41b82634ec0ee
 	weak
 [file "docs/sponsors.md"]
 	url = https://github.com/devlooped/sponsors/blob/main/sponsors.md
-	sha = f5083be8f1faa6963f2c357567742fa8b2bf605d
-	etag = ffd4afe700c7514bc5935915082daaf7630a447ec044d875e0480792ee40cc3e
+	sha = 6fb43bffd12bea00ab2182498fc249dab0e56413
+	etag = dcbcf9e8b108ab3543d48c20622299d24bd2c9c16de99169c7e6a989ef284226
 	weak
 [file ".github/workflows/combine-prs.yml"]
 	url = https://github.com/devlooped/oss/blob/main/.github/workflows/combine-prs.yml
