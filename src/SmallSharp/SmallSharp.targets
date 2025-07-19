@@ -1,7 +1,5 @@
 <Project>
 
-  <UsingTask AssemblyFile="SmallSharp.dll" TaskName="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
-
   <PropertyGroup>
     <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
     <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
@@ -25,13 +23,6 @@
           Condition="$([System.Version]::Parse('16.8.0').CompareTo($([System.Version]::Parse($(MSBuildVersion))))) == 1 and '$(BuildingInsideVisualStudio)' == 'true'">
     <!-- Top-level programs require this, so does our source generator. -->
     <Error Text="SmallSharp requires Visual Studio 16.8 or greater." />
-  </Target>
-
-  <Target Name="MonitorActiveDocument" Condition="'$(BuildingInsideVisualStudio)' == 'true'" AfterTargets="CompileDesignTime" DependsOnTargets="CollectStartupFile">
-    <MonitorActiveDocument LaunchProfiles="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'Properties', 'launchSettings.json'))"
-                           UserFile="$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(MSBuildProjectFile).user'))"
-                           StartupFiles="@(StartupFile)"
-                           Debugger="$(DebugSmallSharp)"/>
   </Target>
 
   <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
