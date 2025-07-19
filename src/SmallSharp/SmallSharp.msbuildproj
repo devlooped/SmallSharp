@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.Build.NoTargets/3.7.56">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,12 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="1.2.4" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.0.0" Pack="false" />
-    <PackageReference Include="EnvDTE" Version="16.10.31320.204" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.OLE.Interop" Version="16.10.31320.204" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="16.10.31320.204" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="16.10.31320.204" PrivateAssets="all" />
+    <PackageReference Include="NuGetizer" Version="1.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" />
     <PackageReference Include="JsonPoke" Version="1.2.0" />
   </ItemGroup>
