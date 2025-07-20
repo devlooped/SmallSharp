@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.3.0](https://github.com/devlooped/SmallSharp/tree/v1.3.0) (2025-07-19)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.2.0...v1.3.0)
+
+:sparkles: Implemented enhancements:
+
+- Remove brittle active document tracking [\#122](https://github.com/devlooped/SmallSharp/pull/122) (@kzu)
+
 ## [v1.2.0](https://github.com/devlooped/SmallSharp/tree/v1.2.0) (2024-07-17)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.1.7...v1.2.0)
