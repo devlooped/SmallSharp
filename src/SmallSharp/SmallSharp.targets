@@ -1,6 +1,6 @@
 <Project>
 
-  <UsingTask AssemblyFile="SmallSharp.dll" TaskName="EmitPackages" />
+  <UsingTask AssemblyFile="SmallSharp.dll" TaskName="EmitTargets" />
 
   <PropertyGroup>
     <UserProjectNamespace>
@@ -8,7 +8,7 @@
     </UserProjectNamespace>
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
     <StartupFile Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">$(ActiveCompile)</StartupFile>
-    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitPackages</StartupFileDependsOn>
+    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
   
     <SmallSharpPackagesTargets>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)SmallSharp.targets</SmallSharpPackagesTargets>
   </PropertyGroup>
@@ -154,12 +154,12 @@
               Value="Project" />
   </Target>
 
-  <Target Name="EmitPackages" Returns="@(FileBasedPackage)"
+  <Target Name="EmitTargets" Returns="@(FileBasedPackage)"
           DependsOnTargets="CollectStartupFile;SelectTopLevelCompile;SelectStartupFile" 
           Inputs="@(Compile);$(ActiveDebugProfile);$(ActiveCompile);Properties\launchSettings.json" Outputs="Directory.Packages.props">
-    <EmitPackages StartupFile="$(StartupFile)" TargetsFile="$(SmallSharpPackagesTargets)">
+    <EmitTargets StartupFile="$(StartupFile)" TargetsFile="$(SmallSharpPackagesTargets)">
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
-    </EmitPackages>
+    </EmitTargets>
   </Target>
 
   <Import Project="$(SmallSharpPackagesTargets)" Condition="Exists('$(SmallSharpPackagesTargets)')" />
