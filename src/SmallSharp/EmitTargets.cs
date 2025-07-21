@@ -8,9 +8,10 @@ using Microsoft.Build.Utilities;
 
 namespace SmallSharp;
 
-public class EmitPackages : Task
+public class EmitTargets : Task
 {
-    static readonly Regex regex = new(@"^#:package\s+([^@]+)@(.+)$");
+    static readonly Regex packageExpr = new(@"^#:package\s+([^@]+)@(.+)$");
+    static readonly Regex propertyExpr = new(@"^#:property\s+([^@]+)\s+(.+)$");
 
     [Required]
     public ITaskItem? StartupFile { get; set; }
@@ -30,11 +31,12 @@ public class EmitPackages : Task
         var filePath = StartupFile.GetMetadata("FullPath");
         var contents = File.ReadAllLines(filePath);
 
-        var elements = new List<XElement>();
+        var items = new List<XElement>();
+        var properties = new List<XElement>();
 
         foreach (var line in contents)
         {
-            if (regex.Match(line) is { Success: true } match)
+            if (packageExpr.Match(line) is { Success: true } match)
             {
                 var id = match.Groups[1].Value.Trim();
                 var version = match.Groups[2].Value.Trim();
@@ -44,14 +46,16 @@ public class EmitPackages : Task
                     { "Version", version }
                 }));
 
-                elements.Add(new XElement("PackageReference",
+                items.Add(new XElement("PackageReference",
                     new XAttribute("Include", id),
                     new XAttribute("Version", version)));
+            }
+            else if (propertyExpr.Match(line) is { Success: true } propMatch)
+            {
+                var name = propMatch.Groups[1].Value.Trim();
+                var value = propMatch.Groups[2].Value.Trim();
 
-                // TODO: emit the PackageVersion element too?
-                //elements.Add(new XElement("PackageVersion",
-                //    new XAttribute("Include", id),
-                //    new XAttribute("Version", version)));
+                properties.Add(new XElement(name, value));
             }
         }
 
@@ -59,7 +63,8 @@ public class EmitPackages : Task
 
         var doc = new XDocument(
             new XElement("Project",
-                new XElement("ItemGroup", elements)
+                new XElement("PropertyGroup", properties),
+                new XElement("ItemGroup", items)
             )
         );
 
