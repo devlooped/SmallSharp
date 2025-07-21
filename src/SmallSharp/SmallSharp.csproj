@@ -8,6 +8,8 @@
     <PackNone>true</PackNone>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(VsInstallRoot)\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
 
   <ItemGroup>

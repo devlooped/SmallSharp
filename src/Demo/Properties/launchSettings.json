@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Humanizer.cs": {
+      "commandName": "Project"
+    },
+    "Mcp.cs": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+﻿name: demos
+on: 
+  push:
+    branches: [ main, dev, 'dev/*', 'feature/*', 'rel/*' ]
+    paths-ignore:
+      - changelog.md
+      - readme.md
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_NOLOGO: true
+  PackOnBuild: true
+  GeneratePackageOnBuild: true
+  VersionPrefix: 42.42.${{ github.run_number }}
+  VersionLabel: ${{ github.ref }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  MSBUILDTERMINALLOGGER: auto
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  demos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🤘 checkout
+        uses: actions/checkout@v4
+
+      - name: ⚙ dotnet
+        uses: devlooped/actions-dotnet-env@v1
+
+      - name: 🙏 build
+        run: dotnet build -m:1 -bl:build.binlog
+
+      - name: 🚀 demo
+        run: |
+          # detect and set the version of the SDK we just built
+          $version = gci bin | select -first 1 -expandproperty BaseName | %{ $_.Substring(11) }
+          pushd src/Demo
+          jq --arg version "$version" '.["msbuild-sdks"].SmallSharp = $version' global.json > temp.json && mv temp.json global.json
+          # build with each top-level file as the active one
+          gci *.cs | %{ dotnet build -t:StartupFile -p:ActiveCompile=$_.name && dotnet build -p:ActiveCompile=$_.name }
+          
