@@ -3,8 +3,6 @@
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="EmitPackages" />
 
   <PropertyGroup>
-    <!-- Excluding top-level files so we can only set to Compile the startup/active one -->
-    <DefaultItemExcludesInProjectFolder>*$(DefaultLanguageSourceExtension)</DefaultItemExcludesInProjectFolder>
     <UserProjectNamespace>
       <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
@@ -137,6 +135,11 @@
     <Warning Text="Could not set ActiveDebugProfile=$(StartupFile). Run the project once to fix it."
              Condition="'$(StartupFile)' != '' and '$(StartupDebugProfile)' != '$(StartupFile)'"/>
 
+  </Target>
+
+  <Target Name="AfterClean">
+    <Delete Files="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
+            Condition="Exists('$(MSBuildProjectDirectory)\Properties\launchSettings.json')" />
   </Target>
 
   <Target Name="UpdateLaunchSettings">
