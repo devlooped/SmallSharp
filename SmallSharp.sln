@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\publish.yml = .github\workflows\publish.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp", "src\SmallSharp\SmallSharp.msbuildproj", "{97648980-AA30-4AC0-B8E9-FCF6359F56A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallSharp", "src\SmallSharp\SmallSharp.csproj", "{97648980-AA30-4AC0-B8E9-FCF6359F56A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
