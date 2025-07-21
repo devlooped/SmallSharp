@@ -11,7 +11,7 @@ namespace SmallSharp;
 public class EmitTargets : Task
 {
     static readonly Regex packageExpr = new(@"^#:package\s+([^@]+)@(.+)$");
-    static readonly Regex propertyExpr = new(@"^#:property\s+([^@]+)\s+(.+)$");
+    static readonly Regex propertyExpr = new(@"^#:property\s+([^\s]+)\s+(.+)$");
 
     [Required]
     public ITaskItem? StartupFile { get; set; }
