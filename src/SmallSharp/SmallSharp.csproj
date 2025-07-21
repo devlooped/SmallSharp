@@ -3,14 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>SmallSharp</PackageId>
-    <Description>Create, edit and run multiple C# top-level programs in the same project 😍</Description>
+    <Description>
+      Create, edit and run multiple C# top-level programs in the same project, 
+      respecting per-file `#:package` references and `#:property` project values 😍
+    </Description>
     <PackFolder>build</PackFolder>
     <PackNone>true</PackNone>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <DevelopmentDependency>true</DevelopmentDependency>
     <StartAction>Program</StartAction>
     <StartProgram>$(VsInstallRoot)\Common7\IDE\devenv.exe</StartProgram>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>dotnet csharp run</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\osmfeula.txt" Link="osmfeula.txt" PackagePath="OSMFEULA.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NuGetizer" Version="1.2.4" />
