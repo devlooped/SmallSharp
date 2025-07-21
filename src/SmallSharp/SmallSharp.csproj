@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>SmallSharp</PackageId>
+    <Description>Create, edit and run multiple C# top-level programs in the same project 😍</Description>
+    <PackFolder>build</PackFolder>
+    <PackNone>true</PackNone>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGetizer" Version="1.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" />
+    <PackageReference Include="JsonPoke" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.13.26" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
+    <None Update="SmallSharp.targets" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Sdk.props;Sdk.targets" PackFolder="Sdk" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Include="SmallSharp.targets;Sdk.props;Sdk.targets" />
+  </ItemGroup>
+
+</Project>
