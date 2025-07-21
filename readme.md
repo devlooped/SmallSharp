@@ -60,7 +60,7 @@ Recommended installation as an SDK:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Sdk Name="SmallSharp" Version="..." />
+  <Sdk Name="SmallSharp" Version="2.0.0" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -99,8 +99,6 @@ unrelated features of the compiler, nuget and MSBuild:
 3. Whenever changed, the dropdown selection is persisted as the `$(ActiveDebugProfile)` MSBuild property in a file 
    named after the project with the `.user` extension
 4. This file is imported before NuGet-provided MSBuild targets
-5. The `$(DefaultItemExcludesInProjectFolder)` MSBuild property allows excluding items at the project-level from 
-   the automatically added items by the SDK.
 
 Using the above features in concert, **SmallSharp** essentially does the following:
 
@@ -112,8 +110,35 @@ Using the above features in concert, **SmallSharp** essentially does the followi
 
 * Explicitly include as `<Compile>` only the `$(ActiveDebugProfile)` property value.
 
+* Emit `#:package` and `#:property` directive to an automatically imported `obj\SmallSharp.targets` file
+
+* SmallSharp MSBuild SDK automatically imports the `SmallSharp.targets` file, which causes a new 
+  restore to automatically happen in Visual Studio, bringing all required dependencies automatically.
+
 This basically mean that this it will also work consistently if you use `dotnet run` from the command-line, 
 since the "Main" file selection is performed exclusively via MSBuild item manipulation.
+
+> [!TIP]
+> It is recommended to keep the project file to its bare minimum, usually having just the SmallSharp 
+> SDK reference, and do all project/package references in the top-level files using the `#:package` and 
+> `#:property` directives for improved isolation between the top-level programs.
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="SmallSharp" Version="2.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+```
+
+![run humanizer file](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/runfile1.png)
+
+![run mcp file](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/runfile2.png)
 
 <!-- include https://github.com/devlooped/sponsors/raw/main/footer.md -->
 # Sponsors 
