@@ -20,6 +20,7 @@
 
   <PropertyGroup Label="NuGet">
     <Authors>Daniel Cazzulino</Authors>
+    <Company>Devlooped</Company>
     <Copyright>Copyright (C) Daniel Cazzulino and Contributors. All rights reserved.</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
