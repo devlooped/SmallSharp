@@ -1,9 +1,9 @@
+#:property Title LaTeX to Image MCP
+#:property Version 0.5.0
 #:package Smith@0.2.5
 #:package DotNetConfig.Configuration@1.2.*
 #:package ModelContextProtocol@0.3.0-preview.*
 #:package Microsoft.Extensions.Http@9.*
-#:property Title "LaTeX to Image MCP"
-#:property Version 0.5.0
 
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
