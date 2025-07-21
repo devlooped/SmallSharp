@@ -4,101 +4,86 @@
 [![Version](https://img.shields.io/nuget/v/SmallSharp.svg?color=royalblue)](https://www.nuget.org/packages/SmallSharp) [![Downloads](https://img.shields.io/nuget/dt/SmallSharp?color=darkmagenta)](https://www.nuget.org/packages/SmallSharp) [![License](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/LICENSE) [![GH CI Status](https://github.com/devlooped/SmallSharp/workflows/build/badge.svg?branch=main)](https://github.com/devlooped/avatar/actions?query=branch%3Amain+workflow%3Abuild+) 
 
 <!-- #content -->
-Create, edit and run multiple C# top-level programs in the same project 😍
+Create, edit and run multiple C# top-level programs in the same project, respecting per-file `#:package` 
+references and `#:property` 😍
 
 ## Why
 
 C# [top-level programs](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements) 
 allow a very intuitive, simple and streamlined experience for quickly spiking or learning C#. 
+The addition of [dotnet run app.cs](https://devblogs.microsoft.com/dotnet/announcing-dotnet-run-app/) in 
+.NET 10 takes this further by allowing package references and even MSBuild properties to be 
+specified per file:
 
-One missing thing since their introduction in Visual Studio is that you can only have one such 
-top-level program in a project. This means that in order to prototype or learn a different area 
-of .NET, you'd be forced to either replace your previous top-level program or change it to be a 
-non-compile item somehow so you can keep it around (i.e. rename to a `.txt` or change its build action).
+```csharp
+#:package Humanizer@2.14.1
 
-**SmallSharp** allows you to select which file should be the top-level program to run, right from 
-the Start button/dropdown (for compilation and launch/debug). Moreover, it will monitor the active 
-file you're editing, and automatically make it the startup file for you!
+using Humanizer;
+
+var dotNet9Released = DateTimeOffset.Parse("2024-12-03");
+var since = DateTimeOffset.Now - dotNet9Released;
+
+Console.WriteLine($"It has been {since.Humanize()} since .NET 9 was released.");
+```
+
+Editing these standalone files in VSCode, however, is suboptimal compared with the full C# 
+experience in Visual Studio. In Visual Studio, though, you can only have one top-level program 
+in a project, and as of now, you cannot leverage the `#:package` and `#:property` directives 
+at all.
+
+**SmallSharp** allows dynamically selecting the file to run, right from the Start button/dropdown 
+(for compilation and launch/debug). It also automatically restores the `#:package` references so 
+the project system can resolve them, and even emits the `#:property` directives if present to customize 
+the build as needed.
 
 ![start button](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/launchSettings.png)
 
 This list is automatically kept in sync as you add more `.cs` files to the project. When you select 
 one target C# file, that becomes the only top-level program to be compiled, so you don't have to 
-modify any of the others since they automatically become *None* items.
+modify any of the others since they automatically become *None* items. 
+
+> [!TIP]
+> An initial build after selection change migh be needed to restore the packages and compile the 
+> selected file
 
 All compile files directly under the project directory root are considered top-level programs for 
-selection and compilation purposes. If you need to share code among them, you can place them in 
-subdirectories and those will behave like normal compile items.
+selection and compilation purposes. If you need to share code among them, you can place additional 
+files in subdirectories and those will behave like normal compile items.
 
 ## Usage
 
-There is no need to install any Visual Studio extension. SmallSharp works by just installing the 
+SmallSharp works by just installing the 
 [SmallSharp](https://nuget.org/packages/SmallSharp) nuget package in a C# console project.
 
-1. Create a new Console project:
-
-![New Project Dialog](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/NewConsoleProject.png)
-
-  * Target the recommended framework version (i.e. net8.0 or net10.0):
+Recommended installation as an SDK:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Sdk Name="SmallSharp" Version="..." />
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
 </Project>
 ```
 
-  * Or use latest C# language version if targeting another framework:
-
+Or as a regular package reference:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-</Project>
-```
- 
-1. Install the **SmallSharp** nuget package using your preferred method:
-
-  * From the Dependencies node, Manage NuGet Packages dialog:
-
-![New Project Dialog](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/NuGetPackage.png)
-
-   * By just adding it directly to the .csproj:
-
-```xml
   <ItemGroup>
     <PackageReference Include="SmallSharp" Version="*" />
   </ItemGroup>
-```
 
-   * Via the dotnet CLI:
-
-```
-> dotnet add package SmallSharp
-```
-
-   * Via the Package Manager console:
-
-```
-PM> install-package SmallSharp
-```
-
-3. Now open that Program.cs and make changes to the new concise top-level program such as:
-
-```csharp
-using System;
-using static System.Console;
-
-WriteLine("Hello World!");
+</Project>
 ```
 
 Keep adding as many top-level programs as you need, and switch between them easily by simply 
