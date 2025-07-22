@@ -3,22 +3,24 @@
 
 [![Version](https://img.shields.io/nuget/v/SmallSharp.svg?color=royalblue)](https://www.nuget.org/packages/SmallSharp) [![Downloads](https://img.shields.io/nuget/dt/SmallSharp?color=darkmagenta)](https://www.nuget.org/packages/SmallSharp) [![License](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/LICENSE) [![GH CI Status](https://github.com/devlooped/SmallSharp/workflows/build/badge.svg?branch=main)](https://github.com/devlooped/avatar/actions?query=branch%3Amain+workflow%3Abuild+) 
 
-<!-- #content -->
+<!-- #description -->
 Create, edit and run multiple C# top-level programs in the same project, respecting per-file `#:package` 
 references and `#:property` project values 😍
+<!-- #description -->
 
 ## Open Source Maintenance Fee
 
 To ensure the long-term sustainability of this project, use of SmallSharp requires an 
 [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). While the source 
 code is freely available under the terms of the [MIT License](https://github.com/devlooped/SmallSharp/blob/main/license.txt), all other aspects of the 
-project--including opening or commenting on issues, participating in discussions and 
-downloading releases--require [adherence to the Maintenance Fee](https://github.com/devlooped/SmallSharp/blob/main/osmfeula.txt).
+project --including opening or commenting on issues, participating in discussions and 
+downloading releases-- require [adherence to the Maintenance Fee](https://github.com/devlooped/SmallSharp/blob/main/osmfeula.txt).
 
 In short, if you use this project to generate revenue, the [Maintenance Fee is required](https://github.com/devlooped/SmallSharp/blob/main/osmfeula.txt).
 
 To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/devlooped).
 
+<!-- #content -->
 ## Overview
 
 C# [top-level programs](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements) 
