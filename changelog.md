@@ -1,5 +1,16 @@
 # Changelog
 
+## [v2.0.0-beta](https://github.com/devlooped/SmallSharp/tree/v2.0.0-beta) (2025-07-22)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.3.0...v2.0.0-beta)
+
+:sparkles: Implemented enhancements:
+
+- Fix issue with properties containing spaces [\#130](https://github.com/devlooped/SmallSharp/pull/130) (@kzu)
+- Add support for \#:property directive [\#129](https://github.com/devlooped/SmallSharp/pull/129) (@kzu)
+- Clean launchsettings.json if explicitly cleaned [\#128](https://github.com/devlooped/SmallSharp/pull/128) (@kzu)
+- Add run file \#:package support [\#125](https://github.com/devlooped/SmallSharp/pull/125) (@kzu)
+
 ## [v1.3.0](https://github.com/devlooped/SmallSharp/tree/v1.3.0) (2025-07-19)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v1.2.0...v1.3.0)
