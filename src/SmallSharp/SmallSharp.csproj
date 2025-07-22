@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="1.2.4" />
+    <PackageReference Include="NuGetizer" Version="1.3.0" />
     <PackageReference Include="JsonPoke" Version="1.2.0" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.13.26" Pack="false" />
   </ItemGroup>
