@@ -2,6 +2,11 @@
 
   <Import Project="..\build\SmallSharp.props" />
 
+  <PropertyGroup>
+    <ImportProjectExtensionProps>true</ImportProjectExtensionProps>
+    <ImportProjectExtensionTargets>true</ImportProjectExtensionTargets>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="JsonPoke" Version="1.2.0" PrivateAssets="all" />
   </ItemGroup>

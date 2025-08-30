@@ -8,9 +8,10 @@
     </UserProjectNamespace>
     <StartupFile>$(ActiveDebugProfile)</StartupFile>
     <StartupFile Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">$(ActiveCompile)</StartupFile>
-    <StartupFileDependsOn>CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
-  
-    <SmallSharpPackagesTargets>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)SmallSharp.targets</SmallSharpPackagesTargets>
+    <StartupFileDependsOn>EnsureImportProjectExtensions;CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
+    
+    <!-- For CLI dotnet run, users should set ImportProjectExtensionTargets=true -->
+    <SmallSharpPackagesTargets>$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).smallsharp.targets</SmallSharpPackagesTargets>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,10 @@
   </ItemGroup>
 
   <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
+
+  <Target Name="EnsureImportProjectExtensions" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'">
+    <Error Code="SCS01" Text="Setting ImportProjectExtensionProps and ImportProjectExtensionTargets project properties to 'true' is required by SmallSharp to support C# package and project directives." />
+  </Target>
 
   <Target Name="CollectStartupFile">
     <ItemGroup>
@@ -161,8 +166,6 @@
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
     </EmitTargets>
   </Target>
-
-  <Import Project="$(SmallSharpPackagesTargets)" Condition="Exists('$(SmallSharpPackagesTargets)')" />
 
   <UsingTask TaskName="SortItems" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
