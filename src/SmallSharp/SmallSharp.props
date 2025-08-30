@@ -1,11 +1,11 @@
 <Project>
 
   <PropertyGroup>
-    <!-- We emit Directory.Packages.props for #:package references -->
-    <!--<CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>-->
     <!-- This disables compilation error in VS for #: prefix -->
     <Features Condition="'$(MSBuildIsRestoring)' != 'true'">$(Features);FileBasedProgram</Features>
-  </PropertyGroup>
+
+    <!-- Capture project-level properties before they are defaulted by Microsoft.Common.targets -->
+    <CustomBeforeMicrosoftCSharpTargets>$(MSBuildThisFileDirectory)\SmallSharp.Before.props</CustomBeforeMicrosoftCSharpTargets>
+</PropertyGroup>
 
 </Project>

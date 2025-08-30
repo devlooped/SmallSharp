@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <_ImportProjectExtensionProps>$(ImportProjectExtensionProps)</_ImportProjectExtensionProps>
+    <_ImportProjectExtensionTargets>$(ImportProjectExtensionTargets)</_ImportProjectExtensionTargets>
+  </PropertyGroup>
+
+</Project>

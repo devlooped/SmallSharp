@@ -32,11 +32,12 @@
   <ItemGroup>
     <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
     <None Update="SmallSharp.targets" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="SmallSharp.Before.targets" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Sdk.props;Sdk.targets" PackFolder="Sdk" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Include="SmallSharp.targets;Sdk.props;Sdk.targets" />
+    <UpToDateCheckInput Include="SmallSharp.targets;SmallSharp.Before.targets;Sdk.props;Sdk.targets" />
   </ItemGroup>
 
 </Project>
