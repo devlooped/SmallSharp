@@ -41,5 +41,5 @@ jobs:
           pushd src/Demo
           jq --arg version "$version" '.["msbuild-sdks"].SmallSharp = $version' global.json > temp.json && mv temp.json global.json
           # build with each top-level file as the active one
-          gci *.cs | %{ dotnet build -t:StartupFile -p:ActiveCompile=$_.name && dotnet build -p:ActiveCompile=$_.name }
+          gci *.cs | %{ dotnet build -p:ActiveFile=$_.name }
           
