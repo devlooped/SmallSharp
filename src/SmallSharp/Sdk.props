@@ -14,7 +14,7 @@
   <!-- Import Common.props explicitly we're too early here to use MSBuildProjectExtensionsPath -->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="'$(MicrosoftCommonPropsHasBeenImported)' != 'true' and Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.SDK"
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"
        Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props')" />
 
   <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props" 
