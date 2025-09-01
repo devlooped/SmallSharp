@@ -1,6 +1,6 @@
 <Project>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.SDK"
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk"
        Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.targets')" />
 
   <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdks.targets"
