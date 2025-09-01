@@ -7,8 +7,8 @@
 [![build](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml)
 
 <!-- #description -->
-Create, edit and run multiple C# top-level programs in the same project, respecting per-file `#:package` 
-references and `#:property` project values 😍
+Create, edit and run multiple C# file-based apps in the same project, honoring per-file `#:package` 
+references, `#:property` project values and even `#:sdk` 😍
 <!-- #description -->
 
 ## Open Source Maintenance Fee
@@ -21,7 +21,7 @@ downloading releases-- require [adherence to the Maintenance Fee](https://github
 
 In short, if you use this project to generate revenue, the [Maintenance Fee is required](https://github.com/devlooped/SmallSharp/blob/main/osmfeula.txt).
 
-To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/devlooped).
+To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/devlooped) at the corresponding OSMF tier (starting at just $10!).
 
 <!-- #content -->
 ## Overview
