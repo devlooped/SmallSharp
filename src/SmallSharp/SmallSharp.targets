@@ -1,38 +1,46 @@
 <Project>
 
   <UsingTask AssemblyFile="SmallSharp.dll" TaskName="EmitTargets" />
+  <UsingTask AssemblyFile="JsonPoke.dll" TaskName="JsonPoke"/>
 
   <PropertyGroup>
     <UserProjectNamespace>
       <Namespace Prefix="msb" Uri="http://schemas.microsoft.com/developer/msbuild/2003" />
     </UserProjectNamespace>
-    <StartupFile>$(ActiveDebugProfile)</StartupFile>
-    <StartupFile Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">$(ActiveCompile)</StartupFile>
-    <StartupFileDependsOn>EnsureImportProjectExtensions;CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
+    <!-- Backs compat -->
+    <ActiveFile Condition="'$(ActiveCompile)' != ''">$(ActiveCompile)</ActiveFile>
+    <StartupFile>$(ActiveFile)</StartupFile>
+    <StartupFile Condition="'$(StartupFile)' == ''">$(ActiveDebugProfile)</StartupFile>
+    <FindStartupFile Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')">true</FindStartupFile>
+    <StartupFileDependsOn>EnsureProperties;CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
     
-    <!-- For CLI dotnet run, users should set ImportProjectExtensionTargets=true -->
+    <!-- For CLI dotnet run, users must set ImportProjectExtensionProps/ImportProjectExtensionTargets=true -->
+    <SmallSharpPackagesProps>$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).smallsharp.props</SmallSharpPackagesProps>
     <SmallSharpPackagesTargets>$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).smallsharp.targets</SmallSharpPackagesTargets>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Ensures all top-level files show up in the IDE -->
-    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile);$(ActiveCompile)" />
+    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile);$(ActiveFile)" />
     <Compile Remove="*$(DefaultLanguageSourceExtension)" />
     <!-- Ensure changes we make to this file trigger a new DTB -->
     <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
-    <UpToDateCheckBuilt Include="$(SmallSharpPackagesTargets)" />
+    <UpToDateCheckBuilt Include="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)" />
   </ItemGroup>
 
   <!-- When restoring, if we include the source files, we'd get duplicate references. -->
   <ItemGroup Condition="'$(MSBuildIsRestoring)' != 'true'">
     <Compile Include="$(ActiveDebugProfile)" Condition="Exists('$(ActiveDebugProfile)')" />
-    <Compile Include="$(ActiveCompile)" Condition="Exists('$(ActiveCompile)') and '$(ActiveCompile)' != '$(ActiveDebugProfile)'" />
+    <Compile Include="$(ActiveFile)" Condition="Exists('$(ActiveFile)') and '$(ActiveFile)' != '$(ActiveDebugProfile)'" />
   </ItemGroup>
 
-  <Target Name="StartupFile" BeforeTargets="BeforeCompile;CoreCompile;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
+  <Target Name="StartupFile" BeforeTargets="ResolvePackageAssets;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
 
-  <Target Name="EnsureImportProjectExtensions" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'">
-    <Error Code="SCS01" Text="Setting ImportProjectExtensionProps and ImportProjectExtensionTargets project properties to 'true' is required by SmallSharp to support C# package and project directives." />
+  <Target Name="EnsureProperties" Condition="'$(CheckSmallSharpRequirements)' != 'false'">
+    <Error Code="SCS01" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'"
+           Text="Setting ImportProjectExtensionProps and ImportProjectExtensionTargets project properties to 'true' is required by SmallSharp to support C# package and project directives." />
+    <Error Code="SCS02" Condition="'$(ManagePackageVersionsCentrally)' == 'true'" 
+           Text="Setting ManagePackageVersionsCentrally to 'true' is not supported by SmallSharp since C# program files can declare package references via #:package directives." />
   </Target>
 
   <Target Name="CollectStartupFile">
@@ -41,27 +49,13 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="SelectTopLevelCompile">
-    <ItemGroup>
-      <!-- We remove all top-level from Compile because copy/pasting startup files may end up 
-           causing those items to be hardcoded in the .csproj -->
-      <Compile Remove="@(Compile -> WithMetadataValue('RelativeDir', ''))" />
-      <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
-      <UpToDateCheckInput Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
-    </ItemGroup>
-  </Target>
-
   <!-- Defaults the startup file to the first Compile, if none previously selected. -->
-  <Target Name="SelectStartupFile"
-          Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')" Returns="$(StartupFile)">
+  <Target Name="SelectStartupFile" Condition="'$(FindStartupFile)' == 'true'" Returns="$(StartupFile)">
 
-    <PropertyGroup Condition="'$(ActiveDebugProfile)' == '' or !Exists('$(ActiveDebugProfile)')">
-      <FindStartupFile>true</FindStartupFile>
-    </PropertyGroup>
-    <ItemGroup Condition="'$(FindStartupFile)' == 'true'">
+    <ItemGroup>
       <ReversedCompile Include="@(StartupFile -> Reverse())" />
     </ItemGroup>
-    <PropertyGroup Condition="'$(FindStartupFile)' == 'true'">
+    <PropertyGroup>
       <StartupFile>%(ReversedCompile.Identity)</StartupFile>
     </PropertyGroup>
 
@@ -142,6 +136,16 @@
 
   </Target>
 
+  <Target Name="SelectTopLevelCompile">
+    <ItemGroup>
+      <!-- We remove all top-level from Compile because copy/pasting startup files may end up 
+           causing those items to be hardcoded in the .csproj -->
+      <Compile Remove="@(Compile -> WithMetadataValue('RelativeDir', ''))" />
+      <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
+      <UpToDateCheckInput Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="AfterClean">
     <Delete Files="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
             Condition="Exists('$(MSBuildProjectDirectory)\Properties\launchSettings.json')" />
@@ -159,12 +163,41 @@
               Value="Project" />
   </Target>
 
-  <Target Name="EmitTargets" Returns="@(FileBasedPackage)"
-          DependsOnTargets="CollectStartupFile;SelectTopLevelCompile;SelectStartupFile" 
-          Inputs="@(Compile);$(ActiveDebugProfile);$(ActiveCompile);Properties\launchSettings.json" Outputs="Directory.Packages.props">
-    <EmitTargets StartupFile="$(StartupFile)" TargetsFile="$(SmallSharpPackagesTargets)">
+  <Target Name="EmitTargets" DependsOnTargets="CollectStartupFile;SelectTopLevelCompile;SelectStartupFile" 
+          Inputs="@(Compile);$(ActiveDebugProfile);$(ActiveFile);Properties\launchSettings.json" 
+          Outputs="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)">
+    <EmitTargets StartupFile="$(StartupFile)"
+                 PropsFile="$(SmallSharpPackagesProps)"
+                 TargetsFile="$(SmallSharpPackagesTargets)"
+                 UsingSmallSharpSDK="$(UsingSmallSharpSDK)"
+                 BaseIntermediateOutputPath="$(BaseIntermediateOutputPath)">
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
+      <Output TaskParameter="Properties" PropertyName="FileBasedProperty" />
+      <Output TaskParameter="Sdks" PropertyName="FileBasedSdk" />
+      <Output TaskParameter="Success" PropertyName="RestoreNeeded" />
     </EmitTargets>
+  </Target>
+
+  <Target Name="RestoreBeforeBuild" BeforeTargets="ResolvePackageAssets" DependsOnTargets="EmitTargets" 
+          Condition="'$(RestoreNeeded)' == 'true' and '$(DesignTimeBuild)' != 'true' and '$(UsingSmallSharpSDK)' != 'true'">
+
+    <PropertyGroup>
+      <DynamicProjectAssetsFile>$(MSBuildProjectExtensionsPath)smallsharp.assets.json</DynamicProjectAssetsFile>
+    </PropertyGroup>
+
+    <MSBuild
+        Projects="$(MSBuildProjectFullPath)"
+        Targets="Restore"
+        BuildInParallel="false"
+        Properties="RestoreUseStaticGraphEvaluation=false;ImportProjectExtensionProps=true;ImportProjectExtensionTargets=true;Guid=$([System.Guid]::NewGuid().ToString())">
+    </MSBuild>
+
+    <Copy SourceFiles="$(ProjectAssetsFile)" DestinationFiles="$(DynamicProjectAssetsFile)" />
+
+    <PropertyGroup>
+      <ProjectAssetsFile>$(DynamicProjectAssetsFile)</ProjectAssetsFile>
+    </PropertyGroup>
+
   </Target>
 
   <UsingTask TaskName="SortItems" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">

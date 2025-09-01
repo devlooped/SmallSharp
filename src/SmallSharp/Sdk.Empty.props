@@ -1,0 +1,3 @@
+<Project>
+  <!-- This is needed since the Microsoft.NET.SDK Sdk.props imports the Microsoft.Common.props unconditionally -->
+</Project>

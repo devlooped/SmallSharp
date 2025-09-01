@@ -24,20 +24,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="1.3.0" />
-    <PackageReference Include="JsonPoke" Version="1.2.0" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.13.26" Pack="false" />
+    <PackageReference Include="NuGetizer" Version="1.3.0" />
+    <PackageReference Include="JsonPoke" Version="1.2.0" Pack="false" GeneratePathProperty="true" />
+    <PackageReference Include="NuGet.Versioning" Version="6.14.0" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
+    <PackageReference Include="ThisAssembly.Project" Version="2.0.14" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\_._" PackFolder="lib\netstandard2.0" Visible="false" />
     <None Update="SmallSharp.targets" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" />
     <None Update="SmallSharp.Before.targets" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" />
-    <None Update="Sdk.props;Sdk.targets" PackFolder="Sdk" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Sdk.*" PackFolder="Sdk" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgJsonPoke)\build\JsonPoke.dll" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(PkgJsonPoke)\build\Newtonsoft.Json.dll" PackFolder="$(PackFolder)" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Include="SmallSharp.targets;SmallSharp.Before.targets;Sdk.props;Sdk.targets" />
+    <UpToDateCheckInput Include="SmallSharp.targets;SmallSharp.Before.targets;Sdk.props;Sdk.Empty.props;Sdk.targets" />
+    <ProjectProperty Include="PackageVersion" />
   </ItemGroup>
 
 </Project>

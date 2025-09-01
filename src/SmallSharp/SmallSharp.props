@@ -6,6 +6,8 @@
 
     <!-- Capture project-level properties before they are defaulted by Microsoft.Common.targets -->
     <CustomBeforeMicrosoftCSharpTargets>$(MSBuildThisFileDirectory)\SmallSharp.Before.props</CustomBeforeMicrosoftCSharpTargets>
-</PropertyGroup>
+
+    <UsingSmallSharpSDK Condition="'$(UsingSmallSharpSDK)' == ''">false</UsingSmallSharpSDK>
+  </PropertyGroup>
 
 </Project>

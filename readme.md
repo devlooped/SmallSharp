@@ -28,12 +28,13 @@ To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/devlo
 
 C# [top-level programs](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements) 
 allow a very intuitive, simple and streamlined experience for quickly spiking or learning C#. 
-The addition of [dotnet run app.cs](https://devblogs.microsoft.com/dotnet/announcing-dotnet-run-app/) in 
-.NET 10 takes this further by allowing package references and even MSBuild properties to be 
+The addition of [file-based apps](https://devblogs.microsoft.com/dotnet/announcing-dotnet-run-app/) in 
+.NET 10 [takes this further](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives#file-based-apps) by allowing package references and even MSBuild properties to be 
 specified per file:
 
 ```csharp
 #:package Humanizer@2.14.1
+#:property LangVersion=preview
 
 using Humanizer;
 
@@ -70,41 +71,56 @@ files in subdirectories and those will behave like normal compile items.
 ## Usage
 
 SmallSharp works by just installing the 
-[SmallSharp](https://nuget.org/packages/SmallSharp) nuget package in a C# console project.
+[SmallSharp](https://nuget.org/packages/SmallSharp) nuget package in a C# console project 
+and adding a couple extra properties to the project file:
 
-Recommended installation as an SDK:
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <Sdk Name="SmallSharp" Version="2.0.0" />
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
-</Project>
-```
-
-Or as a regular package reference:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
+
+    <!-- 👇 additional properties required in package mode -->
+    <ImportProjectExtensionProps>true</ImportProjectExtensionProps>
+    <ImportProjectExtensionTargets>true</ImportProjectExtensionTargets>   
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmallSharp" Version="*" />
+    <PackageReference Include="SmallSharp" Version="*" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
 ```
 
+If your file-based apps use the `#:sdk` [directive](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives#file-based-apps), 
+you need to add SmallSharp as an SDK reference instead so the SDK is picked up by the 
+generated targets/props instead of the project file. You also don't need the additional 
+properties since the SDK mode sets them automatically for you: 
+
+```xml
+<Project Sdk="SmallSharp/2.1.0">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+```
+
+> [!IMPORTANT]
+> If no `#:sdk` directive is provided by a specific C# file-based app, the `Microsoft.NET.SDK` will be 
+> used by default in this SDK mode.
+
 Keep adding as many top-level programs as you need, and switch between them easily by simply 
 selecting the desired file from the Start button dropdown.
+
+When running from the command-line, you can select the file to run by passing it as an argument to `dotnet run`:
+
+```bash
+dotnet run -p:ActiveFile program1.cs
+```
 
 ## How It Works
 
@@ -116,6 +132,7 @@ unrelated features of the compiler, nuget and MSBuild:
 3. Whenever changed, the dropdown selection is persisted as the `$(ActiveDebugProfile)` MSBuild property in a file 
    named after the project with the `.user` extension
 4. This file is imported before NuGet-provided MSBuild targets
+5. VS ignores `#:` directives when adding the flag `FileBasedProgram` to the `$(Features)` project property.
 
 Using the above features in concert, **SmallSharp** essentially does the following:
 
@@ -138,7 +155,7 @@ since the "Main" file selection is performed exclusively via MSBuild item manipu
 > [!TIP]
 > It is recommended to keep the project file to its bare minimum, usually having just the SmallSharp 
 > SDK reference, and do all project/package references in the top-level files using the `#:package` and 
-> `#:property` directives for improved isolation between the top-level programs.
+> `#:property` directives for improved isolation between the different file-based apps.
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">

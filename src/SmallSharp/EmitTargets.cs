@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -10,17 +11,36 @@ namespace SmallSharp;
 
 public class EmitTargets : Task
 {
+    static readonly Regex sdkExpr = new(@"^#:sdk\s+([^@]+?)(@(.+))?$");
     static readonly Regex packageExpr = new(@"^#:package\s+([^@]+)@(.+)$");
     static readonly Regex propertyExpr = new(@"^#:property\s+([^\s]+)\s+(.+)$");
 
     [Required]
-    public ITaskItem? StartupFile { get; set; }
+    public required ITaskItem StartupFile { get; set; }
 
     [Required]
-    public string TargetsFile { get; set; } = "SmallSharp.targets";
+    public required string BaseIntermediateOutputPath { get; set; }
+
+    [Required]
+    public required string PropsFile { get; set; }
+
+    [Required]
+    public required string TargetsFile { get; set; }
+
+    [Required]
+    public bool UsingSmallSharpSDK { get; set; } = false;
 
     [Output]
     public ITaskItem[] Packages { get; set; } = [];
+
+    [Output]
+    public ITaskItem[] Sdks { get; set; } = [];
+
+    [Output]
+    public ITaskItem[] Properties { get; set; } = [];
+
+    [Output]
+    public bool Success { get; set; } = false;
 
     public override bool Execute()
     {
@@ -28,11 +48,15 @@ public class EmitTargets : Task
             return false;
 
         var packages = new List<ITaskItem>();
+        var sdkItems = new List<ITaskItem>();
+        var propItems = new List<ITaskItem>();
+
         var filePath = StartupFile.GetMetadata("FullPath");
         var contents = File.ReadAllLines(filePath);
 
         var items = new List<XElement>();
         var properties = new List<XElement>();
+        var sdks = new List<XAttribute[]>();
 
         foreach (var line in contents)
         {
@@ -50,27 +74,72 @@ public class EmitTargets : Task
                     new XAttribute("Include", id),
                     new XAttribute("Version", version)));
             }
+            else if (sdkExpr.Match(line) is { Success: true } sdkMatch)
+            {
+                var name = sdkMatch.Groups[1].Value.Trim();
+                var version = sdkMatch.Groups[2].Value.Trim();
+                if (!string.IsNullOrEmpty(version))
+                {
+                    sdkItems.Add(new TaskItem(name, new Dictionary<string, string>
+                    {
+                        { "Version", version }
+                    }));
+                    sdks.Add([new XAttribute("Sdk", name), new XAttribute("Version", version)]);
+                }
+                else
+                {
+                    sdkItems.Add(new TaskItem(name));
+                    sdks.Add([new XAttribute("Sdk", name)]);
+                }
+            }
             else if (propertyExpr.Match(line) is { Success: true } propMatch)
             {
                 var name = propMatch.Groups[1].Value.Trim();
                 var value = propMatch.Groups[2].Value.Trim();
 
+                propItems.Add(new TaskItem(name, new Dictionary<string, string>
+                {
+                    { "Value", value }
+                }));
                 properties.Add(new XElement(name, value));
             }
         }
 
         Packages = [.. packages];
+        Sdks = [.. sdkItems];
+        Properties = [.. propItems];
 
-        var doc = new XDocument(
-            new XElement("Project",
-                new XElement("PropertyGroup", properties),
-                new XElement("ItemGroup", items)
-            )
-        );
+        if (sdks.Count > 0 && !UsingSmallSharpSDK)
+        {
+            Log.LogError($"When using #:sdk directive(s), you must use SmallSharp as an SDK: <Project Sdk=\"SmallSharp/{ThisAssembly.Project.Version}\">.");
+            return false;
+        }
 
-        using var writer = XmlWriter.Create(TargetsFile, new XmlWriterSettings { Indent = true });
-        doc.Save(writer);
+        // We only emit the default SDK if the SmallSharpSDK is in use, since otherwise the 
+        // project file is expected to define its own SDK and we'd be duplicating it.
+        if (sdks.Count == 0)
+            sdks.Add([new XAttribute("Sdk", "Microsoft.NET.Sdk")]);
 
+        WriteXml(TargetsFile, new XElement("Project",
+            new XElement("PropertyGroup", properties),
+            new XElement("ItemGroup", items)
+        ));
+
+        WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.props"), new XElement("Project",
+            sdks.Select(x => new XElement("Import", [new XAttribute("Project", "Sdk.props"), .. x]))));
+
+        WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.targets"), new XElement("Project",
+            sdks.Select(x => new XElement("Import", [new XAttribute("Project", "Sdk.targets"), .. x]))));
+
+        WriteXml(PropsFile, new XElement("Project"));
+
+        Success = true;
         return true;
+    }
+
+    void WriteXml(string path, XElement root)
+    {
+        using var writer = XmlWriter.Create(path, new XmlWriterSettings { Indent = true });
+        root.Save(writer);
     }
 }
