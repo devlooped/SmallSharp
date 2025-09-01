@@ -1,6 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Sdk Name="SmallSharp" />
+﻿<Project Sdk="SmallSharp">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
