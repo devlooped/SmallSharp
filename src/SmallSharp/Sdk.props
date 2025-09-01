@@ -1,14 +1,25 @@
 <Project>
 
-  <Import Project="..\build\SmallSharp.props" />
-
   <PropertyGroup>
     <ImportProjectExtensionProps>true</ImportProjectExtensionProps>
     <ImportProjectExtensionTargets>true</ImportProjectExtensionTargets>
+    
+    <!-- Since we use this to build StartupFile list and as an SDK, we might not have .NET SDK imported yet (i.e. no C# files at all) -->
+    <UsingSmallSharpSDK>true</UsingSmallSharpSDK>
+
+    <!-- Workaround https://github.com/dotnet/sdk/issues/50573 -->
+    <AlternateCommonProps>$(MSBuildThisFileDirectory)\Sdk.Empty.props</AlternateCommonProps>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JsonPoke" Version="1.2.0" PrivateAssets="all" />
-  </ItemGroup>
+  <!-- Import Common.props explicitly we're too early here to use MSBuildProjectExtensionsPath -->
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="'$(MicrosoftCommonPropsHasBeenImported)' != 'true' and Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.SDK"
+       Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props')" />
+
+  <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props" 
+       Condition="Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props')" />
+
+  <Import Project="..\build\SmallSharp.props" />
 
 </Project>

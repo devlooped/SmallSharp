@@ -1,5 +1,33 @@
 <Project>
 
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.SDK"
+       Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.targets')" />
+
+  <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdks.targets"
+       Condition="Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.targets')" />
+
   <Import Project="..\build\SmallSharp.targets" />
+
+  <Target Name="ImplicitPackageReferenceFromStartupFile" BeforeTargets="_GenerateProjectRestoreGraphPerFramework"
+          DependsOnTargets="StartupFile"
+          Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)') and '$(RestoreNeeded)' == 'true'" >
+
+    <!-- Optimize for restore success on first run without previously running our targets -->
+    <ReadLinesFromFile File="$(StartupFile)">
+      <Output TaskParameter="Lines" ItemName="_StartupFileLines" />
+    </ReadLinesFromFile>
+
+    <ItemGroup>
+      <_PkgLines Include="@(_StartupFileLines)"
+                 Condition="$([MSBuild]::ValueOrDefault('%(Identity)', '').StartsWith('#:package '))" />
+
+      <_PkgReference Include="$([MSBuild]::ValueOrDefault('%(_PkgLines.Identity)', '').Substring(10))" />
+
+      <PackageReference Condition="'@(_PkgReference)' != ''" Include="$([MSBuild]::ValueOrDefault('%(_PkgReference.Identity)', '').Split('@')[0])">
+        <Version>$([MSBuild]::ValueOrDefault('%(_PkgReference.Identity)', '').Split('@')[1])</Version>
+      </PackageReference>
+    </ItemGroup>
+
+  </Target>
 
 </Project>
