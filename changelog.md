@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.1.0-alpha](https://github.com/devlooped/SmallSharp/tree/v2.1.0-alpha) (2025-09-01)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.0.0...v2.1.0-alpha)
+
+:sparkles: Implemented enhancements:
+
+- Update package references instead of emitting duplicates [\#140](https://github.com/devlooped/SmallSharp/issues/140)
+- SmallSharp generated targets are not imported from dotnet build/run [\#139](https://github.com/devlooped/SmallSharp/issues/139)
+- Add support for \#:sdk directive and no restore failures [\#144](https://github.com/devlooped/SmallSharp/pull/144) (@kzu)
+- Ensure dotnet build works too [\#141](https://github.com/devlooped/SmallSharp/pull/141) (@kzu)
+
+:hammer: Other:
+
+- Add support for \#:sdk directive [\#143](https://github.com/devlooped/SmallSharp/issues/143)
+
 ## [v2.0.0](https://github.com/devlooped/SmallSharp/tree/v2.0.0) (2025-07-22)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.0.0-rc...v2.0.0)
