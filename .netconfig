@@ -91,9 +91,7 @@
 	sha = 4339749ef4b8f66def75931df09ef99c149f8421
 [file "src/kzu.snk"]
 	url = https://github.com/devlooped/oss/blob/main/src/kzu.snk
-	etag = b8d789b5b6bea017cdcc8badcea888ad78de3e34298efca922054e9fb0e7b6b9
-	weak
-	sha = 0683ee777d7d878d4bf013d7deea352685135a05
+	skip
 [file ".github/workflows/pages.yml"]
 	url = https://github.com/clarius/pages/blob/main/.github/workflows/pages.yml
 	etag = c52b3f0463b88abf696ddf2c6902675e0bc9d1e812bb317cb758221d75330b56

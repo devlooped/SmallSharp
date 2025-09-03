@@ -62,7 +62,7 @@ modify any of the others since they automatically become *None* items.
 
 > [!TIP]
 > An initial build after selection change migh be needed to restore the packages and compile the 
-> selected file
+> selected file, unless you're using the SDK mode for SmallSharp (see below).
 
 All compile files directly under the project directory root are considered top-level programs for 
 selection and compilation purposes. If you need to share code among them, you can place additional 
@@ -93,10 +93,16 @@ and adding a couple extra properties to the project file:
 </Project>
 ```
 
-If your file-based apps use the `#:sdk` [directive](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives#file-based-apps), 
-you need to add SmallSharp as an SDK reference instead so the SDK is picked up by the 
-generated targets/props instead of the project file. You also don't need the additional 
-properties since the SDK mode sets them automatically for you: 
+There are some limitations with this mode, however: 
+* You cannot use the `#:sdk` [directive](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives#file-based-apps) 
+  to specify a different SDK per file, since the project file already specifies one.
+* CLI-based builds may require multiple passes to restore and build the selected file, since 
+  the package is only restored after the first build.
+* You must add ImportProjectExtensionProps/ImportProjectExtensionTargets manually, polluting the 
+  project file.
+
+So the recommended way to use SmallSharp is via the SDK mode, which results in a more streamlined 
+and seamless experience across IDE and CLI builds:
 
 ```xml
 <Project Sdk="SmallSharp/2.1.0">
@@ -108,6 +114,9 @@ properties since the SDK mode sets them automatically for you:
 
 </Project>
 ```
+
+The SDK mode will always produce a successful build in a single `dotnet build` pass even if you 
+change the `ActiveFile` between builds.
 
 > [!IMPORTANT]
 > If no `#:sdk` directive is provided by a specific C# file-based app, the `Microsoft.NET.SDK` will be 
@@ -156,19 +165,6 @@ since the "Main" file selection is performed exclusively via MSBuild item manipu
 > It is recommended to keep the project file to its bare minimum, usually having just the SmallSharp 
 > SDK reference, and do all project/package references in the top-level files using the `#:package` and 
 > `#:property` directives for improved isolation between the different file-based apps.
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <Sdk Name="SmallSharp" Version="2.0.0" />
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
-</Project>
-```
 
 ![run humanizer file](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/runfile1.png)
 

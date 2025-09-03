@@ -8,9 +8,9 @@
 
   <Import Project="..\build\SmallSharp.targets" />
 
-  <Target Name="ImplicitPackageReferenceFromStartupFile" BeforeTargets="_GenerateProjectRestoreGraphPerFramework"
+  <Target Name="ImplicitPackageReferenceFromStartupFile" BeforeTargets="_GenerateProjectRestoreGraphPerFramework;ResolvePackageAssets"
           DependsOnTargets="StartupFile"
-          Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)') and '$(RestoreNeeded)' == 'true'" >
+          Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)') and '$(SmallSharpProjectExtensionPropsImported)' != 'true'">
 
     <!-- Optimize for restore success on first run without previously running our targets -->
     <ReadLinesFromFile File="$(StartupFile)">

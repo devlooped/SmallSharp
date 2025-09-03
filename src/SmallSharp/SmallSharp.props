@@ -10,4 +10,6 @@
     <UsingSmallSharpSDK Condition="'$(UsingSmallSharpSDK)' == ''">false</UsingSmallSharpSDK>
   </PropertyGroup>
 
+  <Import Project="SmallSharp.Version.props"/>
+
 </Project>
