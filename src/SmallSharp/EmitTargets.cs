@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,6 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using static SmallSharp.TaskItemFactory;
 
 namespace SmallSharp;
 
@@ -27,9 +29,6 @@ public class EmitTargets : Task
     [Required]
     public required string TargetsFile { get; set; }
 
-    [Required]
-    public bool UsingSmallSharpSDK { get; set; } = false;
-
     [Output]
     public ITaskItem[] Packages { get; set; } = [];
 
@@ -38,9 +37,6 @@ public class EmitTargets : Task
 
     [Output]
     public ITaskItem[] Properties { get; set; } = [];
-
-    [Output]
-    public bool Success { get; set; } = false;
 
     public override bool Execute()
     {
@@ -65,10 +61,7 @@ public class EmitTargets : Task
                 var id = match.Groups[1].Value.Trim();
                 var version = match.Groups[2].Value.Trim();
 
-                packages.Add(new TaskItem(id, new Dictionary<string, string>
-                {
-                    { "Version", version }
-                }));
+                packages.Add(NewTaskItem(id, [("Version", version)]));
 
                 items.Add(new XElement("PackageReference",
                     new XAttribute("Include", id),
@@ -80,10 +73,7 @@ public class EmitTargets : Task
                 var version = sdkMatch.Groups[2].Value.Trim();
                 if (!string.IsNullOrEmpty(version))
                 {
-                    sdkItems.Add(new TaskItem(name, new Dictionary<string, string>
-                    {
-                        { "Version", version }
-                    }));
+                    sdkItems.Add(NewTaskItem(name, [("Version", version)]));
                     sdks.Add([new XAttribute("Sdk", name), new XAttribute("Version", version)]);
                 }
                 else
@@ -97,10 +87,7 @@ public class EmitTargets : Task
                 var name = propMatch.Groups[1].Value.Trim();
                 var value = propMatch.Groups[2].Value.Trim();
 
-                propItems.Add(new TaskItem(name, new Dictionary<string, string>
-                {
-                    { "Value", value }
-                }));
+                propItems.Add(NewTaskItem(name, [("Value", value)]));
                 properties.Add(new XElement(name, value));
             }
         }
@@ -108,12 +95,6 @@ public class EmitTargets : Task
         Packages = [.. packages];
         Sdks = [.. sdkItems];
         Properties = [.. propItems];
-
-        if (sdks.Count > 0 && !UsingSmallSharpSDK)
-        {
-            Log.LogError($"When using #:sdk directive(s), you must use SmallSharp as an SDK: <Project Sdk=\"SmallSharp/{ThisAssembly.Project.Version}\">.");
-            return false;
-        }
 
         // We only emit the default SDK if the SmallSharpSDK is in use, since otherwise the 
         // project file is expected to define its own SDK and we'd be duplicating it.
@@ -131,14 +112,18 @@ public class EmitTargets : Task
         WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.targets"), new XElement("Project",
             sdks.Select(x => new XElement("Import", [new XAttribute("Project", "Sdk.targets"), .. x]))));
 
-        WriteXml(PropsFile, new XElement("Project"));
+        WriteXml(PropsFile, new XElement("Project",
+            new XElement("PropertyGroup",
+                [new XElement("SmallSharpProjectExtensionPropsImported", "true")])));
 
-        Success = true;
         return true;
     }
 
     void WriteXml(string path, XElement root)
     {
+        if (Path.GetDirectoryName(path) is { } dir)
+            Directory.CreateDirectory(dir);
+
         using var writer = XmlWriter.Create(path, new XmlWriterSettings { Indent = true });
         root.Save(writer);
     }

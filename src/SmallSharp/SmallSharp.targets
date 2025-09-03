@@ -37,10 +37,12 @@
   <Target Name="StartupFile" BeforeTargets="ResolvePackageAssets;CompileDesignTime;CollectUpToDateCheckInputDesignTime" DependsOnTargets="$(StartupFileDependsOn)" />
 
   <Target Name="EnsureProperties" Condition="'$(CheckSmallSharpRequirements)' != 'false'">
-    <Error Code="SCS01" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'"
+    <Error Code="SCS02" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'"
            Text="Setting ImportProjectExtensionProps and ImportProjectExtensionTargets project properties to 'true' is required by SmallSharp to support C# package and project directives." />
-    <Error Code="SCS02" Condition="'$(ManagePackageVersionsCentrally)' == 'true'" 
+    <Error Code="SCS03" Condition="'$(ManagePackageVersionsCentrally)' == 'true'" 
            Text="Setting ManagePackageVersionsCentrally to 'true' is not supported by SmallSharp since C# program files can declare package references via #:package directives." />
+    <Warning Code="SCS04" Condition="'$(UsingSmallSharpSDK)' != 'true'"
+             Text='For maximum compatibility with file-based apps, use SmallSharp as an SDK instead of a package reference: &lt;Project Sdk="SmallSharp/$(SmallSharpVersion)"&gt;' />
   </Target>
 
   <Target Name="CollectStartupFile">
@@ -169,35 +171,13 @@
     <EmitTargets StartupFile="$(StartupFile)"
                  PropsFile="$(SmallSharpPackagesProps)"
                  TargetsFile="$(SmallSharpPackagesTargets)"
-                 UsingSmallSharpSDK="$(UsingSmallSharpSDK)"
                  BaseIntermediateOutputPath="$(BaseIntermediateOutputPath)">
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
       <Output TaskParameter="Properties" PropertyName="FileBasedProperty" />
       <Output TaskParameter="Sdks" PropertyName="FileBasedSdk" />
-      <Output TaskParameter="Success" PropertyName="RestoreNeeded" />
     </EmitTargets>
-  </Target>
-
-  <Target Name="RestoreBeforeBuild" BeforeTargets="ResolvePackageAssets" DependsOnTargets="EmitTargets" 
-          Condition="'$(RestoreNeeded)' == 'true' and '$(DesignTimeBuild)' != 'true' and '$(UsingSmallSharpSDK)' != 'true'">
-
-    <PropertyGroup>
-      <DynamicProjectAssetsFile>$(MSBuildProjectExtensionsPath)smallsharp.assets.json</DynamicProjectAssetsFile>
-    </PropertyGroup>
-
-    <MSBuild
-        Projects="$(MSBuildProjectFullPath)"
-        Targets="Restore"
-        BuildInParallel="false"
-        Properties="RestoreUseStaticGraphEvaluation=false;ImportProjectExtensionProps=true;ImportProjectExtensionTargets=true;Guid=$([System.Guid]::NewGuid().ToString())">
-    </MSBuild>
-
-    <Copy SourceFiles="$(ProjectAssetsFile)" DestinationFiles="$(DynamicProjectAssetsFile)" />
-
-    <PropertyGroup>
-      <ProjectAssetsFile>$(DynamicProjectAssetsFile)</ProjectAssetsFile>
-    </PropertyGroup>
-
+    <Error Code="SCS001" Condition="'@(FileBasedSdk)' != '' and '$(UsingSmallSharpSDK)' != 'true'"
+           Text="Using #:sdk directives requires using SmallSharp as an SDK instead of a package reference: &lt;Project Sdk='SmallSharp/$(SmallSharpVersion)'&gt;" />
   </Target>
 
   <UsingTask TaskName="SortItems" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
