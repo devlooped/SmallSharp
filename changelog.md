@@ -1,5 +1,9 @@
 # Changelog
 
+## [v2.1.0](https://github.com/devlooped/SmallSharp/tree/v2.1.0) (2025-09-04)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0-beta...v2.1.0)
+
 ## [v2.1.0-beta](https://github.com/devlooped/SmallSharp/tree/v2.1.0-beta) (2025-09-04)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0-alpha...v2.1.0-beta)
