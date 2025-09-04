@@ -7,7 +7,7 @@
 [![OSS](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/license.txt) 
 
 <!-- #description -->
-Create, edit and run multiple C# file-based apps in the same project, honoring per-file `#:package` 
+Create, edit and run multiple C# file-based apps in the same project in the IDE, honoring per-file `#:package` 
 references, `#:property` project values and even `#:sdk` 😍
 <!-- #description -->
 
