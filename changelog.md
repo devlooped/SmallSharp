@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.1.0-beta](https://github.com/devlooped/SmallSharp/tree/v2.1.0-beta) (2025-09-04)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0-alpha...v2.1.0-beta)
+
+:sparkles: Implemented enhancements:
+
+- Improve automatic restore support in SDK mode [\#147](https://github.com/devlooped/SmallSharp/pull/147) (@kzu)
+
+:twisted_rightwards_arrows: Merged:
+
+- Demo can now rely on plain build working [\#145](https://github.com/devlooped/SmallSharp/pull/145) (@kzu)
+
 ## [v2.1.0-alpha](https://github.com/devlooped/SmallSharp/tree/v2.1.0-alpha) (2025-09-01)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.0.0...v2.1.0-alpha)
