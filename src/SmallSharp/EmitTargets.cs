@@ -29,6 +29,11 @@ public class EmitTargets : Task
     [Required]
     public required string TargetsFile { get; set; }
 
+    [Required]
+    public required bool UsingSDK { get; set; }
+
+    public ITaskItem[] PackageReferences { get; set; } = [];
+
     [Output]
     public ITaskItem[] Packages { get; set; } = [];
 
@@ -37,6 +42,9 @@ public class EmitTargets : Task
 
     [Output]
     public ITaskItem[] Properties { get; set; } = [];
+
+    [Output]
+    public bool RestoreNeeded { get; set; } = false;
 
     public override bool Execute()
     {
@@ -103,7 +111,8 @@ public class EmitTargets : Task
 
         WriteXml(TargetsFile, new XElement("Project",
             new XElement("PropertyGroup", properties),
-            new XElement("ItemGroup", items)
+            // don't emit package references in SDK mode, since we'll add them from the SDK targets.
+            UsingSDK ? new XElement("ItemGroup") : new XElement("ItemGroup", items)
         ));
 
         WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.props"), new XElement("Project",
@@ -115,6 +124,23 @@ public class EmitTargets : Task
         WriteXml(PropsFile, new XElement("Project",
             new XElement("PropertyGroup",
                 [new XElement("SmallSharpProjectExtensionPropsImported", "true")])));
+
+        // Determine if a restore is needed: if any discovered #:package (id+version) is not already
+        // present in the incoming PackageReferences list.
+        foreach (var pkg in packages)
+        {
+            var id = pkg.ItemSpec;
+            var version = pkg.GetMetadata("Version");
+            var exists = PackageReferences?.Any(r =>
+                string.Equals(r.ItemSpec, id, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(r.GetMetadata("Version"), version, StringComparison.OrdinalIgnoreCase)) == true;
+
+            if (!exists)
+            {
+                RestoreNeeded = true;
+                break;
+            }
+        }
 
         return true;
     }
