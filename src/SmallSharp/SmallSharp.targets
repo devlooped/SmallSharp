@@ -168,13 +168,16 @@
   <Target Name="EmitTargets" DependsOnTargets="CollectStartupFile;SelectTopLevelCompile;SelectStartupFile" 
           Inputs="@(Compile);$(ActiveDebugProfile);$(ActiveFile);Properties\launchSettings.json" 
           Outputs="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)">
-    <EmitTargets StartupFile="$(StartupFile)"
+    <EmitTargets StartupFile="$(StartupFile)" 
+                 UsingSDK="$(UsingSmallSharpSDK)"
+                 PackageReferences="@(PackageReferences)"
                  PropsFile="$(SmallSharpPackagesProps)"
                  TargetsFile="$(SmallSharpPackagesTargets)"
                  BaseIntermediateOutputPath="$(BaseIntermediateOutputPath)">
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
       <Output TaskParameter="Properties" PropertyName="FileBasedProperty" />
       <Output TaskParameter="Sdks" PropertyName="FileBasedSdk" />
+      <Output TaskParameter="RestoreNeeded" PropertyName="RestoreNeeded" />
     </EmitTargets>
     <Error Code="SCS001" Condition="'@(FileBasedSdk)' != '' and '$(UsingSmallSharpSDK)' != 'true'"
            Text="Using #:sdk directives requires using SmallSharp as an SDK instead of a package reference: &lt;Project Sdk='SmallSharp/$(SmallSharpVersion)'&gt;" />
