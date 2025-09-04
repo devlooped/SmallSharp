@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>SmallSharp</PackageId>
     <Description>
-      Create, edit and run multiple C# top-level programs in the same project, 
+      Create, edit and run multiple C# top-level programs in the same project in the IDE, 
       respecting per-file `#:package` references and `#:property` project values 😍
     </Description>
     <PackFolder>build</PackFolder>

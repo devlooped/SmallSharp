@@ -7,7 +7,7 @@
 [![build](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml)
 
 <!-- #description -->
-Create, edit and run multiple C# file-based apps in the same project, honoring per-file `#:package` 
+Create, edit and run multiple C# file-based apps in the same project in the IDE, honoring per-file `#:package` 
 references, `#:property` project values and even `#:sdk` 😍
 <!-- #description -->
 
