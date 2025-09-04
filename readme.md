@@ -3,8 +3,8 @@
 
 [![Version](https://img.shields.io/nuget/v/SmallSharp.svg?color=royalblue)](https://www.nuget.org/packages/SmallSharp) 
 [![Downloads](https://img.shields.io/nuget/dt/SmallSharp?color=darkmagenta)](https://www.nuget.org/packages/SmallSharp) 
-[![License](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/LICENSE) 
-[![build](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/devlooped/SmallSharp/actions/workflows/build.yml)
+[![EULA](https://img.shields.io/badge/EULA-OSMF-blue?labelColor=black&color=C9FF30)](https://github.com/devlooped/SmallSharp/blob/main/osmfeula.txt)
+[![OSS](https://img.shields.io/github/license/devlooped/SmallSharp.svg?color=blue)](https://github.com/devlooped/SmallSharp/blob/main/license.txt) 
 
 <!-- #description -->
 Create, edit and run multiple C# file-based apps in the same project, honoring per-file `#:package` 
