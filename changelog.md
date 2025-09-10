@@ -1,8 +1,12 @@
 # Changelog
 
-## [v2.1.1](https://github.com/devlooped/SmallSharp/tree/v2.1.1) (2025-09-10)
+## [v2.2.0](https://github.com/devlooped/SmallSharp/tree/v2.2.0) (2025-09-10)
 
-[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0...v2.1.1)
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0...v2.2.0)
+
+:sparkles: Implemented enhancements:
+
+- Align \#:property Name=Value with RC syntax [\#152](https://github.com/devlooped/SmallSharp/pull/152) (@kzu)
 
 :bug: Fixed bugs:
 
