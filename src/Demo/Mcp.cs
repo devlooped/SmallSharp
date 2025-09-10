@@ -1,5 +1,5 @@
-#:property Title LaTeX to Image MCP
-#:property Version 0.5.0
+#:property Title=LaTeX to Image MCP
+#:property Version=0.5.0
 #:package Smith@0.2.5
 #:package DotNetConfig.Configuration@1.2.*
 #:package ModelContextProtocol@0.3.0-preview.*
