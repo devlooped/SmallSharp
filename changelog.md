@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.2.1](https://github.com/devlooped/SmallSharp/tree/v2.2.1) (2025-09-10)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.0...v2.2.1)
+
+:bug: Fixed bugs:
+
+- Fix error when file has no package references [\#153](https://github.com/devlooped/SmallSharp/pull/153) (@kzu)
+
+:twisted_rightwards_arrows: Merged:
+
+- Improve directive matching by using named groups [\#154](https://github.com/devlooped/SmallSharp/pull/154) (@kzu)
+
 ## [v2.2.0](https://github.com/devlooped/SmallSharp/tree/v2.2.0) (2025-09-10)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0...v2.2.0)
