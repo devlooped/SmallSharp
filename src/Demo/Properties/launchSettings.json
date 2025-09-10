@@ -5,6 +5,9 @@
     },
     "Mcp.cs": {
       "commandName": "Project"
+    },
+    "Hello.cs": {
+      "commandName": "Project"
     }
   }
 }
