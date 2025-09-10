@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.1.1](https://github.com/devlooped/SmallSharp/tree/v2.1.1) (2025-09-10)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0...v2.1.1)
+
+:bug: Fixed bugs:
+
+- We only ever support C\#, so use .cs extension [\#151](https://github.com/devlooped/SmallSharp/pull/151) (@kzu)
+
 ## [v2.1.0](https://github.com/devlooped/SmallSharp/tree/v2.1.0) (2025-09-04)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.1.0-beta...v2.1.0)
