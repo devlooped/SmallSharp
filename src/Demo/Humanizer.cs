@@ -1,5 +1,5 @@
-﻿#:property ImplicitUsings true
-#:property Nullable enable
+﻿#:property ImplicitUsings=true
+#:property Nullable=enable
 #:package Humanizer@2.14.1
 
 using Humanizer;

@@ -15,7 +15,7 @@ public class EmitTargets : Task
 {
     static readonly Regex sdkExpr = new(@"^#:sdk\s+([^@]+?)(@(.+))?$");
     static readonly Regex packageExpr = new(@"^#:package\s+([^@]+)@(.+)$");
-    static readonly Regex propertyExpr = new(@"^#:property\s+([^\s]+)\s+(.+)$");
+    static readonly Regex propertyExpr = new(@"^#:property\s+([^=]+)=(.+)$");
 
     [Required]
     public required ITaskItem StartupFile { get; set; }
