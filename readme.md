@@ -34,7 +34,8 @@ specified per file:
 
 ```csharp
 #:package Humanizer@2.14.1
-#:property LangVersion=preview
+#:property ImplicitUsings true
+#:property Nullable enable
 
 using Humanizer;
 
