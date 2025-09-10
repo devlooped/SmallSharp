@@ -9,7 +9,7 @@
   <Import Project="..\build\SmallSharp.targets" />
 
   <Target Name="ImplicitPackageReferenceFromStartupFile" 
-          BeforeTargets="_GenerateProjectRestoreGraphPerFramework;ResolvePackageAssets;CompileDesignTime;CollectUpToDateCheckInputDesignTime"
+          BeforeTargets="_GenerateProjectRestoreGraphPerFramework;ResolvePackageAssets;CompileDesignTime;CollectUpToDateCheckInputDesignTime;CollectPackageReferences"
           DependsOnTargets="StartupFile"
           Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')">
 
@@ -21,7 +21,9 @@
     <ItemGroup>
       <_PkgLines Include="@(_StartupFileLines)"
                  Condition="$([MSBuild]::ValueOrDefault('%(Identity)', '').StartsWith('#:package '))" />
+    </ItemGroup>
 
+    <ItemGroup Condition="'@(_PkgLines)' != ''">
       <_PkgReference Include="$([MSBuild]::ValueOrDefault('%(_PkgLines.Identity)', '').Substring(10))" />
 
       <PackageReference Condition="'@(_PkgReference)' != ''" Include="$([MSBuild]::ValueOrDefault('%(_PkgReference.Identity)', '').Split('@')[0])">
