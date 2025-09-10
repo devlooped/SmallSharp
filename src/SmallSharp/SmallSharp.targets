@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <!-- Ensures all top-level files show up in the IDE -->
-    <None Include="*$(DefaultLanguageSourceExtension)" Exclude="$(ActiveDebugProfile);$(ActiveFile)" />
-    <Compile Remove="*$(DefaultLanguageSourceExtension)" />
+    <None Include="*.cs" Exclude="$(ActiveDebugProfile);$(ActiveFile)" />
+    <Compile Remove="*.cs" />
     <!-- Ensure changes we make to this file trigger a new DTB -->
     <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
     <UpToDateCheckBuilt Include="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)" />
@@ -47,7 +47,7 @@
 
   <Target Name="CollectStartupFile">
     <ItemGroup>
-      <StartupFile Include="*$(DefaultLanguageSourceExtension)" />
+      <StartupFile Include="*.cs" />
     </ItemGroup>
   </Target>
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- This disables compilation error in VS for #: prefix -->
-    <Features Condition="'$(MSBuildIsRestoring)' != 'true'">$(Features);FileBasedProgram</Features>
+    <Features>$(Features);FileBasedProgram</Features>
 
     <!-- Capture project-level properties before they are defaulted by Microsoft.Common.targets -->
     <CustomBeforeMicrosoftCSharpTargets>$(MSBuildThisFileDirectory)\SmallSharp.Before.props</CustomBeforeMicrosoftCSharpTargets>
