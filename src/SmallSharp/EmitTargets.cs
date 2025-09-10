@@ -13,9 +13,9 @@ namespace SmallSharp;
 
 public class EmitTargets : Task
 {
-    static readonly Regex sdkExpr = new(@"^#:sdk\s+([^@]+?)(@(.+))?$");
-    static readonly Regex packageExpr = new(@"^#:package\s+([^@]+)@(.+)$");
-    static readonly Regex propertyExpr = new(@"^#:property\s+([^=]+)=(.+)$");
+    static readonly Regex sdkExpr = new(@"^#:sdk\s+(?<sdk>[^@]+?)(@(?<version>.+))?$");
+    static readonly Regex packageExpr = new(@"^#:package\s+(?<id>[^@]+)@(?<version>.+)$");
+    static readonly Regex propertyExpr = new(@"^#:property\s+(?<name>[^=]+)=(?<value>.+)$");
 
     [Required]
     public required ITaskItem StartupFile { get; set; }
@@ -66,8 +66,8 @@ public class EmitTargets : Task
         {
             if (packageExpr.Match(line) is { Success: true } match)
             {
-                var id = match.Groups[1].Value.Trim();
-                var version = match.Groups[2].Value.Trim();
+                var id = match.Groups["id"].Value.Trim();
+                var version = match.Groups["version"].Value.Trim();
 
                 packages.Add(NewTaskItem(id, [("Version", version)]));
 
@@ -77,8 +77,8 @@ public class EmitTargets : Task
             }
             else if (sdkExpr.Match(line) is { Success: true } sdkMatch)
             {
-                var name = sdkMatch.Groups[1].Value.Trim();
-                var version = sdkMatch.Groups[2].Value.Trim();
+                var name = sdkMatch.Groups["sdk"].Value.Trim();
+                var version = sdkMatch.Groups["version"].Value.Trim();
                 if (!string.IsNullOrEmpty(version))
                 {
                     sdkItems.Add(NewTaskItem(name, [("Version", version)]));
@@ -92,8 +92,8 @@ public class EmitTargets : Task
             }
             else if (propertyExpr.Match(line) is { Success: true } propMatch)
             {
-                var name = propMatch.Groups[1].Value.Trim();
-                var value = propMatch.Groups[2].Value.Trim();
+                var name = propMatch.Groups["name"].Value.Trim();
+                var value = propMatch.Groups["value"].Value.Trim();
 
                 propItems.Add(NewTaskItem(name, [("Value", value)]));
                 properties.Add(new XElement(name, value));
