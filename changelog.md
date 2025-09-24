@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.2.2](https://github.com/devlooped/SmallSharp/tree/v2.2.2) (2025-09-24)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.1...v2.2.2)
+
+:twisted_rightwards_arrows: Merged:
+
+- Emit package references in SDK mode too [\#157](https://github.com/devlooped/SmallSharp/pull/157) (@kzu)
+
 ## [v2.2.1](https://github.com/devlooped/SmallSharp/tree/v2.2.1) (2025-09-10)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.0...v2.2.1)
