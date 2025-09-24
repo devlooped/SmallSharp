@@ -111,8 +111,10 @@ public class EmitTargets : Task
 
         WriteXml(TargetsFile, new XElement("Project",
             new XElement("PropertyGroup", properties),
-            // don't emit package references in SDK mode, since we'll add them from the SDK targets.
-            UsingSDK ? new XElement("ItemGroup") : new XElement("ItemGroup", items)
+            // We emit the package references always, even if UsingSDK is true, because 
+            // this works better with the background restore that VS does, and nuget 
+            // deduplicates package references anyway.
+            new XElement("ItemGroup", items)
         ));
 
         WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.props"), new XElement("Project",
