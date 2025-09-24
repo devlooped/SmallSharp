@@ -106,7 +106,7 @@ So the recommended way to use SmallSharp is via the SDK mode, which results in a
 and seamless experience across IDE and CLI builds:
 
 ```xml
-<Project Sdk="SmallSharp/2.1.0">
+<Project Sdk="SmallSharp/2.2.3">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
