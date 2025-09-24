@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.2.4](https://github.com/devlooped/SmallSharp/tree/v2.2.4) (2025-09-24)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.3...v2.2.4)
+
+:sparkles: Implemented enhancements:
+
+- Ensure when running from VS, output supports UTF-8 [\#161](https://github.com/devlooped/SmallSharp/pull/161) (@kzu)
+
 ## [v2.2.3](https://github.com/devlooped/SmallSharp/tree/v2.2.3) (2025-09-24)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.2...v2.2.3)
