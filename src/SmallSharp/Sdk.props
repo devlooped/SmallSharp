@@ -9,6 +9,9 @@
 
     <!-- Workaround https://github.com/dotnet/sdk/issues/50573 -->
     <AlternateCommonProps>$(MSBuildThisFileDirectory)\Sdk.Empty.props</AlternateCommonProps>
+
+    <!-- Since we emit duplicate package references from SDK as well as .props -->
+    <NoWarn>$(NoWarn);NU1504</NoWarn>
   </PropertyGroup>
 
   <!-- Import Common.props explicitly we're too early here to use MSBuildProjectExtensionsPath -->
