@@ -7,7 +7,7 @@ jq --arg version "$version" '.["msbuild-sdks"].SmallSharp = $version' global.jso
 # build with each top-level file as the active one
 foreach ($file in gci *.cs) {
     # rm -r -fo obj -ea 0
-    dotnet build Demo.csproj -p:ActiveFile=$($file.Name) -bl:"$($file.BaseName).binlog"
+    dotnet build Demo.csproj -p:start=$($file.Name) -bl:"$($file.BaseName).binlog"
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Build failed for $($file.Name)"
         popd; popd;

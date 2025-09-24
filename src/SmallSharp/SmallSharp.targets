@@ -10,6 +10,8 @@
     <!-- Backs compat -->
     <ActiveFile Condition="'$(ActiveCompile)' != ''">$(ActiveCompile)</ActiveFile>
     <StartupFile>$(ActiveFile)</StartupFile>
+    <StartupFile Condition="'$(StartupFile)' == ''">$(Start)</StartupFile>
+    <StartupFile Condition="'$(StartupFile)' == ''">$(S)</StartupFile>
     <StartupFile Condition="'$(StartupFile)' == ''">$(ActiveDebugProfile)</StartupFile>
     <FindStartupFile Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')">true</FindStartupFile>
     <StartupFileDependsOn>EnsureProperties;CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>

@@ -129,8 +129,10 @@ selecting the desired file from the Start button dropdown.
 When running from the command-line, you can select the file to run by passing it as an argument to `dotnet run`:
 
 ```bash
-dotnet run -p:ActiveFile program1.cs
+dotnet run -p:start=program1.cs
 ```
+
+You can also use the shortcut `-p:s=[FILE]`.
 
 ## How It Works
 
