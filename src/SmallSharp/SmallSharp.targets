@@ -28,6 +28,7 @@
     <!-- Ensure changes we make to this file trigger a new DTB -->
     <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
     <UpToDateCheckBuilt Include="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)" />
+    <Compile Update="@(Compile -> WithMetadataValue('NuGetPackageId', 'SmallSharp'))" Visible="false" />
   </ItemGroup>
 
   <!-- When restoring, if we include the source files, we'd get duplicate references. -->

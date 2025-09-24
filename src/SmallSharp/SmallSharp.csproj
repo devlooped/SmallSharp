@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <None Include="..\..\osmfeula.txt" Link="osmfeula.txt" PackagePath="OSMFEULA.txt" />
+    <Compile Update="ConsoleEncodingInitializer.cs" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>

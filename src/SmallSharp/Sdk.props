@@ -25,4 +25,9 @@
 
   <Import Project="..\build\SmallSharp.props" />
 
+  <!-- In SDK mode, we don't get the content files like we do in package mode, so we add it explicitly here -->
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\contentFiles\cs\netstandard2.0\ConsoleEncodingInitializer.cs" 
+             NuGetPackageId="SmallSharp" />
+  </ItemGroup>
 </Project>
