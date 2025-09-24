@@ -1,3 +1,6 @@
 #:property ImplicitUsings=true
+#:package Spectre.Console@0.51.*
 
-Console.WriteLine("Hello, World!");
+using Spectre.Console;
+
+AnsiConsole.MarkupLine(":globe_showing_americas: Hello, World!");
