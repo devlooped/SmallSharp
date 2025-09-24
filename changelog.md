@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.2.3](https://github.com/devlooped/SmallSharp/tree/v2.2.3) (2025-09-24)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.2...v2.2.3)
+
+:sparkles: Implemented enhancements:
+
+- Switch to $\(Start\) to select startup file [\#160](https://github.com/devlooped/SmallSharp/pull/160) (@kzu)
+
+:bug: Fixed bugs:
+
+- Don't warn during restore about duplicate package refs [\#159](https://github.com/devlooped/SmallSharp/pull/159) (@kzu)
+
+:twisted_rightwards_arrows: Merged:
+
+- Upgrade to latest SLNX format [\#158](https://github.com/devlooped/SmallSharp/pull/158) (@kzu)
+
 ## [v2.2.2](https://github.com/devlooped/SmallSharp/tree/v2.2.2) (2025-09-24)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.1...v2.2.2)
