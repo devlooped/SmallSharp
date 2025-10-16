@@ -26,11 +26,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.13.26" Pack="false" />
-    <PackageReference Include="NuGetizer" Version="1.3.0" />
+    <PackageReference Include="NuGetizer" Version="1.4.2" />
     <PackageReference Include="JsonPoke" Version="1.2.0" Pack="false" GeneratePathProperty="true" />
     <PackageReference Include="NuGet.Versioning" Version="6.14.0" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
-    <PackageReference Include="ThisAssembly.Project" Version="2.0.14" PrivateAssets="all" />
+    <PackageReference Include="ThisAssembly.Project" Version="2.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,9 +51,7 @@
 
   <Target Name="UpdatePackagingVersion" BeforeTargets="Pack">
     <!-- Update packaging version targets -->
-    <XmlPoke XmlInputPath="$(OutputPath)SmallSharp.Version.props"
-				 Query="/Project/PropertyGroup/SmallSharpVersion"
-				 Value="$(Version)"/>
+    <XmlPoke XmlInputPath="$(OutputPath)SmallSharp.Version.props" Query="/Project/PropertyGroup/SmallSharpVersion" Value="$(Version)" />
   </Target>
 
 </Project>

@@ -5,6 +5,7 @@
     <PackOnBuild>true</PackOnBuild>
     <PackageProjectUrl>https://clarius.org/SmallSharp</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Product>SmallSharp</Product>
     <NoWarn>NU1702;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
