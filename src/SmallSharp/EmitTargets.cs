@@ -123,7 +123,10 @@ public class EmitTargets : Task
         WriteXml(Path.Combine(BaseIntermediateOutputPath, "SmallSharp.sdk.targets"), new XElement("Project",
             sdks.Select(x => new XElement("Import", [new XAttribute("Project", "Sdk.targets"), .. x]))));
 
+        // We emit properties both to .props and .targets to ensure all values 
+        // are strictly what's set in the script, either before or after .NET SDK reads them.
         WriteXml(PropsFile, new XElement("Project",
+            new XElement("PropertyGroup", properties),
             new XElement("PropertyGroup",
                 [new XElement("SmallSharpProjectExtensionPropsImported", "true")])));
 
