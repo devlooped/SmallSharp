@@ -173,6 +173,7 @@ since the "Main" file selection is performed exclusively via MSBuild item manipu
 ![run humanizer file](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/runfile1.png)
 
 ![run mcp file](https://raw.githubusercontent.com/devlooped/SmallSharp/main/assets/img/runfile2.png)
+<!-- #content -->
 
 <!-- include https://github.com/devlooped/sponsors/raw/main/footer.md -->
 # Sponsors 
