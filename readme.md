@@ -81,7 +81,8 @@ and adding a couple extra properties to the project file:
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- 👇 allows c# file to override the TF via a #:property -->
+    <TargetFramework Condition="$(TargetFramework) == ''">net10.0</TargetFramework>
 
     <!-- 👇 additional properties required in package mode -->
     <ImportProjectExtensionProps>true</ImportProjectExtensionProps>
@@ -111,7 +112,8 @@ and seamless experience across IDE and CLI builds:
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- 👇 allows c# file to override the TF via a #:property -->
+    <TargetFramework Condition="$(TargetFramework) == ''">net10.0</TargetFramework>
   </PropertyGroup>
 
 </Project>
