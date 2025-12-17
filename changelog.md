@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.0](https://github.com/devlooped/SmallSharp/tree/v2.3.0) (2025-12-17)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.5...v2.3.0)
+
+:sparkles: Implemented enhancements:
+
+- Ensure properties are always set in props+targets [\#171](https://github.com/devlooped/SmallSharp/pull/171) (@kzu)
+
 ## [v2.2.5](https://github.com/devlooped/SmallSharp/tree/v2.2.5) (2025-10-16)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.4...v2.2.5)
