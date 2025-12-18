@@ -30,7 +30,7 @@
     <PackageReference Include="JsonPoke" Version="1.2.0" Pack="false" GeneratePathProperty="true" />
     <PackageReference Include="NuGet.Versioning" Version="6.14.0" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
-    <PackageReference Include="ThisAssembly.Project" Version="2.1.0" PrivateAssets="all" />
+    <PackageReference Include="ThisAssembly.Project" Version="2.1.2" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
