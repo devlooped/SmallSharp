@@ -58,7 +58,7 @@ jobs:
           base: main
           branch: markdown-includes
           delete-branch: true
-          labels: docs
+          labels: dependencies
           author: ${{ env.BOT_AUTHOR }}
           committer: ${{ env.BOT_AUTHOR }}
           commit-message: +Mᐁ includes
