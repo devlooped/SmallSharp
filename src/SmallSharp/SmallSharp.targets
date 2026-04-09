@@ -14,7 +14,7 @@
     <StartupFile Condition="'$(StartupFile)' == ''">$(S)</StartupFile>
     <StartupFile Condition="'$(StartupFile)' == ''">$(ActiveDebugProfile)</StartupFile>
     <FindStartupFile Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')">true</FindStartupFile>
-    <StartupFileDependsOn>EnsureProperties;CollectStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
+    <StartupFileDependsOn>EnsureProperties;CollectStartupFile;ResolveStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
     
     <!-- For CLI dotnet run, users must set ImportProjectExtensionProps/ImportProjectExtensionTargets=true -->
     <SmallSharpPackagesProps>$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).smallsharp.props</SmallSharpPackagesProps>
@@ -25,10 +25,19 @@
     <!-- Ensures all top-level files show up in the IDE -->
     <None Include="*.cs" Exclude="$(ActiveDebugProfile);$(ActiveFile)" />
     <Compile Remove="*.cs" />
+
     <!-- Ensure changes we make to this file trigger a new DTB -->
     <UpToDateCheckBuilt Include="Properties\launchSettings.json" />
     <UpToDateCheckBuilt Include="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)" />
     <Compile Update="@(Compile -> WithMetadataValue('NuGetPackageId', 'SmallSharp'))" Visible="false" />
+
+    <!-- Include linked compile files too -->
+    <_LinkedCompile Include="@(Compile -> HasMetadata('Link'))" />
+    <_NuGetLinked Include="@(_LinkedCompile -> HasMetadata('NuGetPackageId'))" />
+    <_NoNuGetLinked Include="@(_LinkedCompile)" Exclude="@(_NuGetLinked)" />
+    <LinkedCompile Include="@(_NoNuGetLinked -> WithoutMetadataValue('Visible', 'false'))" />
+    <Compile Remove="@(LinkedCompile -> WithoutMetadataValue('Link', '$(ActiveDebugProfile)'))" />
+    <None Include="@(LinkedCompile -> WithoutMetadataValue('Link', '$(ActiveFile)'))" />
   </ItemGroup>
 
   <!-- When restoring, if we include the source files, we'd get duplicate references. -->
@@ -51,7 +60,19 @@
   <Target Name="CollectStartupFile">
     <ItemGroup>
       <StartupFile Include="*.cs" />
+      <StartupFile Include="@(LinkedCompile)" />
     </ItemGroup>
+  </Target>
+
+  <Target Name="ResolveStartupFile" Condition="'$(FindStartupFile)' == 'true'">
+    <ItemGroup>
+      <!-- Find if the specified StartupFile is a filename that matches an available StartupFile item -->
+      <_MatchingStartupFile Include="@(StartupFile)" Condition="'$(StartupFile)' != '' and '%(Filename)%(Extension)' == '$(StartupFile)'" />
+    </ItemGroup>
+    <PropertyGroup Condition="'@(_MatchingStartupFile)' != ''">
+      <StartupFile>@(_MatchingStartupFile -> '%(Identity)')</StartupFile>
+      <FindStartupFile>false</FindStartupFile>
+    </PropertyGroup>
   </Target>
 
   <!-- Defaults the startup file to the first Compile, if none previously selected. -->
@@ -146,6 +167,8 @@
       <!-- We remove all top-level from Compile because copy/pasting startup files may end up 
            causing those items to be hardcoded in the .csproj -->
       <Compile Remove="@(Compile -> WithMetadataValue('RelativeDir', ''))" />
+      <!-- Remove linked compile files too -->
+      <Compile Remove="@(Compile -> HasMetadata('Link'))" />
       <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
       <UpToDateCheckInput Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
     </ItemGroup>
@@ -198,6 +221,41 @@
         <![CDATA[
         SortedItems = Items.OrderBy(i => i.ItemSpec).ToArray();
         ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask TaskName="DumpItems" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Items ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <ItemName />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Using Namespace="System" />
+      <Using Namespace="System.Linq" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+			  var itemName = ItemName ?? "Item";
+			  if (Items.Length == 0)
+				  Log.LogMessage(MessageImportance.High, "No {0} items received to dump.", ItemName ?? "");
+			  else
+				  Log.LogMessage(MessageImportance.High, "Dumping {0} {1} items.", Items.Length, ItemName ?? "");
+
+			  foreach (var item in Items.OrderBy(i => i.ItemSpec))
+			  {
+				  Log.LogMessage(MessageImportance.High, "{0}: {1}", itemName, item.ItemSpec);
+				  foreach (var name in item.MetadataNames.OfType<string>().OrderBy(_ => _))
+				  {
+					  try
+					  {
+						  Log.LogMessage(MessageImportance.High, "\t{0}={1}", name, item.GetMetadata(name));
+					  }
+					  catch { }
+				  }
+			  }
+      ]]>
       </Code>
     </Task>
   </UsingTask>
