@@ -184,6 +184,15 @@
     </PropertyGroup>
   </Target>
 
+  <Target Name="UpdatePackageLicense" BeforeTargets="GetPackageMetadata;GenerateNuspec;Pack" Condition="'$(IsPackable)' == 'true'">
+    <!-- If project has a None item with PackagePath=OSMFEULA.txt -->
+    <PropertyGroup Condition="@(None -> WithMetadataValue('PackagePath', 'OSMFEULA.txt')) != ''">
+      <PackageLicenseExpression></PackageLicenseExpression>
+      <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+      <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    </PropertyGroup>
+  </Target>
+
   <!-- Import before UsingTask because first to declare tasks wins -->
   <Import Project="Directory.targets" Condition="Exists('Directory.targets')"/>
   <Import Project="Directory.targets.user" Condition="Exists('Directory.targets.user')" />
