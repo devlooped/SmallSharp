@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.1](https://github.com/devlooped/SmallSharp/tree/v2.3.1) (2026-04-09)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.0...v2.3.1)
+
+:sparkles: Implemented enhancements:
+
+- Add support for linked files [\#174](https://github.com/devlooped/SmallSharp/pull/174) (@kzu)
+
 ## [v2.3.0](https://github.com/devlooped/SmallSharp/tree/v2.3.0) (2025-12-17)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.2.5...v2.3.0)
