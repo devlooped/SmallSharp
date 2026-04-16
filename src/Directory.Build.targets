@@ -174,7 +174,7 @@
 
   <Target Name="UpdatePackageMetadata"
           BeforeTargets="PrepareForBuild;GenerateMSBuildEditorConfigFileShouldRun;GetAssemblyVersion;GetPackageMetadata;GenerateNuspec;Pack"
-          DependsOnTargets="EnsureProjectInformation"
+          DependsOnTargets="EnsureProjectInformation;UpdatePackageLicense"
           Condition="'$(SourceControlInformationFeatureSupported)' == 'true' And
                      '$(IsPackable)' == 'true'">
     <PropertyGroup>
@@ -184,14 +184,15 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="UpdatePackageLicense" BeforeTargets="GetPackageMetadata;GenerateNuspec;Pack" Condition="'$(IsPackable)' == 'true'">
-    <!-- If project has a None item with PackagePath=OSMFEULA.txt -->
-    <PropertyGroup Condition="@(None -> WithMetadataValue('PackagePath', 'OSMFEULA.txt')) != ''">
+  <Target Name="UpdatePackageLicense">
+    <!-- If project has a None/Content item with PackagePath=OSMFEULA.txt -->
+    <PropertyGroup Condition="@(None -> WithMetadataValue('PackagePath', 'OSMFEULA.txt')) != '' or @(Content -> WithMetadataValue('PackagePath', 'OSMFEULA.txt')) != ''">
       <PackageLicenseExpression></PackageLicenseExpression>
       <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
       <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
   </Target>
+
 
   <!-- Import before UsingTask because first to declare tasks wins -->
   <Import Project="Directory.targets" Condition="Exists('Directory.targets')"/>
