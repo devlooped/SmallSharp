@@ -195,6 +195,9 @@
       <Output TaskParameter="SortedItems" ItemName="SortedStartupFile" />
     </SortItems>
     <JsonPoke ContentPath="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
+              Query="$.profiles['$(MSBuildProjectName)'].commandName"
+              Value="$(MSBuildProjectName)" />
+    <JsonPoke ContentPath="$(MSBuildProjectDirectory)\Properties\launchSettings.json"
               Query="$.profiles['%(SortedStartupFile.Filename)%(SortedStartupFile.Extension)'].commandName"
               Value="Project" />
   </Target>
