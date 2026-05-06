@@ -72,9 +72,29 @@ files in subdirectories and those will behave like normal compile items.
 
 ## Usage
 
-SmallSharp works by just installing the 
-[SmallSharp](https://nuget.org/packages/SmallSharp) nuget package in a C# console project 
-and adding a couple extra properties to the project file:
+The recommended way to use SmallSharp is via the SDK mode, which provides the most streamlined
+and seamless experience across IDE and CLI builds:
+
+```xml
+<Project Sdk="SmallSharp/2.2.3">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- 👇 allows c# file to override the TF via a #:property -->
+    <TargetFramework Condition="$(TargetFramework) == ''">net10.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
+```
+
+The SDK mode will always produce a successful build in a single `dotnet build` pass even if you 
+change the `ActiveFile` between builds.
+
+> [!IMPORTANT]
+> If no `#:sdk` directive is provided by a specific C# file-based app, the `Microsoft.NET.SDK` will be 
+> used by default in this SDK mode.
+
+If you prefer, you can also use SmallSharp as a regular package reference in a C# console project:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -96,35 +116,13 @@ and adding a couple extra properties to the project file:
 </Project>
 ```
 
-There are some limitations with this mode, however: 
+This package-reference mode works, but it has some caveats and limitations:
 * You cannot use the `#:sdk` [directive](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/preprocessor-directives#file-based-apps) 
   to specify a different SDK per file, since the project file already specifies one.
 * CLI-based builds may require multiple passes to restore and build the selected file, since 
   the package is only restored after the first build.
 * You must add ImportProjectExtensionProps/ImportProjectExtensionTargets manually, polluting the 
   project file.
-
-So the recommended way to use SmallSharp is via the SDK mode, which results in a more streamlined 
-and seamless experience across IDE and CLI builds:
-
-```xml
-<Project Sdk="SmallSharp/2.2.3">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <!-- 👇 allows c# file to override the TF via a #:property -->
-    <TargetFramework Condition="$(TargetFramework) == ''">net10.0</TargetFramework>
-  </PropertyGroup>
-
-</Project>
-```
-
-The SDK mode will always produce a successful build in a single `dotnet build` pass even if you 
-change the `ActiveFile` between builds.
-
-> [!IMPORTANT]
-> If no `#:sdk` directive is provided by a specific C# file-based app, the `Microsoft.NET.SDK` will be 
-> used by default in this SDK mode.
 
 Keep adding as many top-level programs as you need, and switch between them easily by simply 
 selecting the desired file from the Start button dropdown.
