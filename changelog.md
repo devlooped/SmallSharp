@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.3.2](https://github.com/devlooped/SmallSharp/tree/v2.3.2) (2026-05-06)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.1...v2.3.2)
+
+:sparkles: Implemented enhancements:
+
+- Add default project launch profile [\#181](https://github.com/devlooped/SmallSharp/pull/181) (@kzu)
+- Support central package version management [\#179](https://github.com/devlooped/SmallSharp/pull/179) (@kzu)
+
+:bug: Fixed bugs:
+
+- Deduplicate Compile items in startup pipeline [\#180](https://github.com/devlooped/SmallSharp/pull/180) (@kzu)
+
 ## [v2.3.1](https://github.com/devlooped/SmallSharp/tree/v2.3.1) (2026-04-09)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.0...v2.3.1)
