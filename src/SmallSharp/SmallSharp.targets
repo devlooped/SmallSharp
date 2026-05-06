@@ -14,7 +14,7 @@
     <StartupFile Condition="'$(StartupFile)' == ''">$(S)</StartupFile>
     <StartupFile Condition="'$(StartupFile)' == ''">$(ActiveDebugProfile)</StartupFile>
     <FindStartupFile Condition="'$(StartupFile)' == '' or !Exists('$(StartupFile)')">true</FindStartupFile>
-    <StartupFileDependsOn>EnsureProperties;CollectStartupFile;ResolveStartupFile;SelectStartupFile;SelectTopLevelCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
+    <StartupFileDependsOn>EnsureProperties;CollectStartupFile;ResolveStartupFile;SelectStartupFile;SelectTopLevelCompile;DeduplicateCompile;UpdateLaunchSettings;EmitTargets</StartupFileDependsOn>
     
     <!-- For CLI dotnet run, users must set ImportProjectExtensionProps/ImportProjectExtensionTargets=true -->
     <SmallSharpPackagesProps>$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).smallsharp.props</SmallSharpPackagesProps>
@@ -169,6 +169,16 @@
       <Compile Remove="@(Compile -> HasMetadata('Link'))" />
       <Compile Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
       <UpToDateCheckInput Include="$(StartupFile)" Condition="'$(StartupFile)' != '' and Exists('$(StartupFile)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="DeduplicateCompile">
+    <ItemGroup>
+      <_DistinctCompile Remove="@(_DistinctCompile)" />
+      <_DistinctCompile Include="@(Compile -> Distinct())" />
+      <Compile Remove="@(Compile)" />
+      <Compile Include="@(_DistinctCompile)" />
+      <_DistinctCompile Remove="@(_DistinctCompile)" />
     </ItemGroup>
   </Target>
 
