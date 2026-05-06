@@ -51,8 +51,6 @@
   <Target Name="EnsureProperties" Condition="'$(CheckSmallSharpRequirements)' != 'false'">
     <Error Code="SCS02" Condition="'$(_ImportProjectExtensionProps)' != 'true' or '$(_ImportProjectExtensionTargets)' != 'true'"
            Text="Setting ImportProjectExtensionProps and ImportProjectExtensionTargets project properties to 'true' is required by SmallSharp to support C# package and project directives." />
-    <Error Code="SCS03" Condition="'$(ManagePackageVersionsCentrally)' == 'true'" 
-           Text="Setting ManagePackageVersionsCentrally to 'true' is not supported by SmallSharp since C# program files can declare package references via #:package directives." />
     <Warning Code="SCS04" Condition="'$(UsingSmallSharpSDK)' != 'true'"
              Text='For maximum compatibility with file-based apps, use SmallSharp as an SDK instead of a package reference: &lt;Project Sdk="SmallSharp/$(SmallSharpVersion)"&gt;' />
   </Target>
@@ -195,11 +193,12 @@
           Inputs="@(Compile);$(ActiveDebugProfile);$(ActiveFile);Properties\launchSettings.json" 
           Outputs="$(SmallSharpPackagesProps);$(SmallSharpPackagesTargets)">
     <EmitTargets StartupFile="$(StartupFile)" 
-                 UsingSDK="$(UsingSmallSharpSDK)"
-                 PackageReferences="@(PackageReferences)"
-                 PropsFile="$(SmallSharpPackagesProps)"
-                 TargetsFile="$(SmallSharpPackagesTargets)"
-                 BaseIntermediateOutputPath="$(BaseIntermediateOutputPath)">
+                  UsingSDK="$(UsingSmallSharpSDK)"
+                  ManagePackageVersionsCentrally="$([MSBuild]::ValueOrDefault('$(ManagePackageVersionsCentrally)', 'false'))"
+                  PackageReferences="@(PackageReferences)"
+                  PropsFile="$(SmallSharpPackagesProps)"
+                  TargetsFile="$(SmallSharpPackagesTargets)"
+                  BaseIntermediateOutputPath="$(BaseIntermediateOutputPath)">
       <Output TaskParameter="Packages" ItemName="FileBasedPackage" />
       <Output TaskParameter="Properties" PropertyName="FileBasedProperty" />
       <Output TaskParameter="Sdks" PropertyName="FileBasedSdk" />
