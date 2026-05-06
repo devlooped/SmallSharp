@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.3](https://github.com/devlooped/SmallSharp/tree/v2.3.3) (2026-05-06)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.2...v2.3.3)
+
+:bug: Fixed bugs:
+
+- Use Project for default launch profile command name [\#182](https://github.com/devlooped/SmallSharp/pull/182) (@kzu)
+
 ## [v2.3.2](https://github.com/devlooped/SmallSharp/tree/v2.3.2) (2026-05-06)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.1...v2.3.2)
