@@ -26,10 +26,29 @@
     <ItemGroup Condition="'@(_PkgLines)' != ''">
       <_PkgReference Include="$([MSBuild]::ValueOrDefault('%(_PkgLines.Identity)', '').Substring(10))" />
 
-      <PackageReference Condition="'@(_PkgReference)' != ''" Include="$([MSBuild]::ValueOrDefault('%(_PkgReference.Identity)', '').Split('@')[0])">
-        <Version>$([MSBuild]::ValueOrDefault('%(_PkgReference.Identity)', '').Split('@')[1])</Version>
+      <_PkgReferenceWithVersion Include="@(_PkgReference)"
+                                Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(_PkgReference.Identity)', '@'))">
+        <PackageId>$([System.Text.RegularExpressions.Regex]::Replace('%(_PkgReference.Identity)', '@.*$', ''))</PackageId>
+        <PackageVersion>$([System.Text.RegularExpressions.Regex]::Replace('%(_PkgReference.Identity)', '^[^@]+@', ''))</PackageVersion>
+      </_PkgReferenceWithVersion>
+
+      <_PkgReferenceWithoutVersion Include="@(_PkgReference)"
+                                   Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('%(_PkgReference.Identity)', '@'))" />
+
+      <PackageReference Include="@(_PkgReferenceWithoutVersion)" />
+
+      <PackageReference Include="%(_PkgReferenceWithVersion.PackageId)"
+                        Condition="'$(ManagePackageVersionsCentrally)' == 'true'" />
+
+      <PackageReference Include="%(_PkgReferenceWithVersion.PackageId)"
+                        Condition="'$(ManagePackageVersionsCentrally)' != 'true'">
+        <Version>%(_PkgReferenceWithVersion.PackageVersion)</Version>
       </PackageReference>
     </ItemGroup>
+
+    <Warning Code="SCS05"
+             Condition="'$(ManagePackageVersionsCentrally)' == 'true' and '@(_PkgReferenceWithVersion)' != ''"
+             Text="Package references declared with #:package and @ versions are not compatible with ManagePackageVersionsCentrally=true; SmallSharp will omit Version metadata and use central package versions for: @(_PkgReferenceWithVersion -> '%(Identity)', ', ')." />
 
   </Target>
 

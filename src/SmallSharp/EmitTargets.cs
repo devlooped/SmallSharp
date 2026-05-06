@@ -14,7 +14,7 @@ namespace SmallSharp;
 public class EmitTargets : Task
 {
     static readonly Regex sdkExpr = new(@"^#:sdk\s+(?<sdk>[^@]+?)(@(?<version>.+))?$");
-    static readonly Regex packageExpr = new(@"^#:package\s+(?<id>[^@]+)@(?<version>.+)$");
+    static readonly Regex packageExpr = new(@"^#:package\s+(?<id>[^@\s]+)(@(?<version>.+))?$");
     static readonly Regex propertyExpr = new(@"^#:property\s+(?<name>[^=]+)=(?<value>.+)$");
 
     [Required]
@@ -31,6 +31,8 @@ public class EmitTargets : Task
 
     [Required]
     public required bool UsingSDK { get; set; }
+
+    public bool ManagePackageVersionsCentrally { get; set; }
 
     public ITaskItem[] PackageReferences { get; set; } = [];
 
@@ -62,18 +64,44 @@ public class EmitTargets : Task
         var properties = new List<XElement>();
         var sdks = new List<XAttribute[]>();
 
-        foreach (var line in contents)
+        for (var i = 0; i < contents.Length; i++)
         {
+            var line = contents[i];
             if (packageExpr.Match(line) is { Success: true } match)
             {
                 var id = match.Groups["id"].Value.Trim();
                 var version = match.Groups["version"].Value.Trim();
+                var hasVersion = !string.IsNullOrEmpty(version);
 
-                packages.Add(NewTaskItem(id, [("Version", version)]));
+                if (ManagePackageVersionsCentrally && hasVersion && !UsingSDK)
+                {
+                    Log.LogWarning(
+                        null,
+                        "SCS05",
+                        null,
+                        filePath,
+                        i + 1,
+                        0,
+                        0,
+                        0,
+                        "Package reference '{0}' declares version '{1}' via #:package while ManagePackageVersionsCentrally=true; SmallSharp will omit Version metadata and use the central package version.",
+                        id,
+                        version);
+                }
 
-                items.Add(new XElement("PackageReference",
-                    new XAttribute("Include", id),
-                    new XAttribute("Version", version)));
+                if (!ManagePackageVersionsCentrally && hasVersion)
+                {
+                    packages.Add(NewTaskItem(id, [("Version", version)]));
+                    items.Add(new XElement("PackageReference",
+                        new XAttribute("Include", id),
+                        new XAttribute("Version", version)));
+                }
+                else
+                {
+                    packages.Add(new TaskItem(id));
+                    items.Add(new XElement("PackageReference",
+                        new XAttribute("Include", id)));
+                }
             }
             else if (sdkExpr.Match(line) is { Success: true } sdkMatch)
             {
@@ -130,7 +158,7 @@ public class EmitTargets : Task
             new XElement("PropertyGroup",
                 [new XElement("SmallSharpProjectExtensionPropsImported", "true")])));
 
-        // Determine if a restore is needed: if any discovered #:package (id+version) is not already
+        // Determine if a restore is needed: if any discovered #:package is not already
         // present in the incoming PackageReferences list.
         foreach (var pkg in packages)
         {
@@ -138,7 +166,8 @@ public class EmitTargets : Task
             var version = pkg.GetMetadata("Version");
             var exists = PackageReferences?.Any(r =>
                 string.Equals(r.ItemSpec, id, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(r.GetMetadata("Version"), version, StringComparison.OrdinalIgnoreCase)) == true;
+                (string.IsNullOrEmpty(version) ||
+                 string.Equals(r.GetMetadata("Version"), version, StringComparison.OrdinalIgnoreCase))) == true;
 
             if (!exists)
             {
