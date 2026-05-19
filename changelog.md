@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.4](https://github.com/devlooped/SmallSharp/tree/v2.3.4) (2026-05-19)
+
+[Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.3...v2.3.4)
+
+:bug: Fixed bugs:
+
+- Fix target inconsistency in generated SDK targets [\#184](https://github.com/devlooped/SmallSharp/pull/184) (@kzu)
+
 ## [v2.3.3](https://github.com/devlooped/SmallSharp/tree/v2.3.3) (2026-05-06)
 
 [Full Changelog](https://github.com/devlooped/SmallSharp/compare/v2.3.2...v2.3.3)
