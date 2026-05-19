@@ -18,10 +18,10 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="'$(MicrosoftCommonPropsHasBeenImported)' != 'true' and Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk"
-       Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props')" />
+       Condition="!Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdk.props')" />
 
-  <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props" 
-       Condition="Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdks.props')" />
+  <Import Project="$(MSBuildProjectExtensionsPath)SmallSharp.sdk.props" 
+       Condition="Exists('$(MSBuildProjectExtensionsPath)SmallSharp.sdk.props')" />
 
   <Import Project="..\build\SmallSharp.props" />
 
