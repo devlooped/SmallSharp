@@ -47,6 +47,9 @@
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
     <!-- See https://learn.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#prunepackagereference-specification -->
     <RestoreEnablePackagePruning>true</RestoreEnablePackagePruning>
+
+    <!-- Needed to improve nuget default for empty PackageId. Workaround for https://github.com/NuGet/Home/issues/14928 -->
+    <ImportNuGetBuildTasksPackTargetsFromSdk>false</ImportNuGetBuildTasksPackTargetsFromSdk>
   </PropertyGroup>
 
   <PropertyGroup Label="Build">
