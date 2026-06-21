@@ -3,10 +3,14 @@ obj
 out
 artifacts
 pack
+agent-tools
+terminals
 TestResults
 results
 BenchmarkDotNet.Artifacts
+mcps
 /app
+/temp
 .vs
 .vscode
 .genaiscript
